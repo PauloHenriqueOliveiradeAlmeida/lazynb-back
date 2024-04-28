@@ -1,0 +1,135 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+}
+
+.background {
+	background-color: #fff;
+	font-family: "Poppins", sans-serif;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.background h1 {
+	margin-top: 3rem;
+	font-size: 3rem;
+	color: #121d46;
+}
+.details {
+	display: flex;
+	flex-direction: column;
+}
+.details img {
+	object-fit: contain;
+	display: none;
+}
+form {
+	background-color: #121d46;
+	color: #fff;
+	width: 90%;
+	margin: 0 auto;
+	padding: 10%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+}
+form h2 {
+	font-size: 2rem;
+	margin-bottom: 2rem;
+}
+form div {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 1.3rem;
+}
+form div input, form div select, form div textarea {
+	font-size: 0.7rem;
+	padding: 0.5rem;
+	border-radius: calc(10px - 5px);
+	border: none;
+	outline: none;
+}
+form div .message-error {
+	font-size: 0.8rem;
+}
+form button {
+	margin-top: calc(2.7rem - 1.3rem);
+	width: 100%;
+	background-color: #fff;
+	border: 1.5px solid #121d46;
+	color: #121d46;
+	padding: 0.5rem;
+	font-weight: bold;
+	border-radius: calc(10pxradius - 5px);
+	transition: border-color 0.4s ease-in-out;
+	position: relative;
+	overflow: hidden;
+}
+form button:hover {
+	color: #fff;
+	border-color: #fff;
+}
+form button:focus {
+	outline: none;
+}
+form button span {
+	position: relative;
+	z-index: 1;
+}
+form button::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 10px;
+	height: 10px;
+	border-radius: 100px;
+	transition: transform 0.4s ease-in;
+}
+form button:hover::after {
+	transform: scale(200);
+	background-color: #121d46;
+	box-shadow: 0px 0px 0px 36px #88abc2;
+}
+form a {
+	color: #fff;
+	margin-top: 1rem;
+	transition: text-decoration 0.2s linear;
+}
+form a:hover {
+	color: #fff;
+	text-decoration: underline;
+}
+@media (width >=768px) {
+	.background {
+		flex-direction: row-reverse;
+		justify-content: space-between;
+   }
+	.details {
+		height: 100%;
+		flex-grow: 3;
+		justify-content: center;
+		align-items: center;
+   }
+	.details img {
+		display: block;
+		width: 90%;
+   }
+	.details h1 {
+		font-size: 4rem;
+		font-weight: 650;
+   }
+	form {
+		height: 100%;
+		border-radius: 0px;
+		width: 40%;
+		margin: 0px;
+		padding: 4rem;
+   }
+}
