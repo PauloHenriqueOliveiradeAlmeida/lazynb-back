@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="style2.css">
+		<title>Editar Colaboradores</title>
+		<script src="script.js"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bellefair&display=swap">
+
+	</head>
+	<body>
+		<div class="background">
+			<form>
+				<h2>Editar Colaboradores</h2>
+				<div>
+					<label htmlFor="nome">Nome do colaborador:</label>
+					<input type="text" id="nome" required />
+				</div>
+				<div>
+					<label htmlFor="email">CPF/CNPJ do colaborador:</label>
+					<input type="number" id="CPF" required />
+				</div>
+				<div>
+					<label htmlFor="telefone">Telefone:</label>
+					<input type="text" id="contato" required />
+				</div>
+				<div>
+					<label htmlFor="password">Email:</label>
+					<input type="email" id="email" required />
+				</div>
+				<div >
+					<p>Administrador?</p>
+					<label>
+						<input type="radio" name="sim_ou_nao">
+						Sim
+					</label>
+
+					<label>
+						<input type="radio" name="sim_ou_nao">
+						Não
+					</label>
+				</div>
+
+				<button type="submit"><span>Editar colaborador</span></button>
+			</form>
+
+			<div class="details">
+				<img src="assets/logo/logo.jpeg" alt="Imagem de Login" width="600" height="600"/>
+			</div>
+		</div>
+	</body>
+</html>

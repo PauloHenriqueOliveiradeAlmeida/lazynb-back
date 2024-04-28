@@ -6,7 +6,7 @@
 
 .background {
 	background-color: #f7f7f7;
-	font-family: "Poppins", sans-serif;
+	font-family: 'Bellefair', sans-serif;
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
@@ -14,6 +14,7 @@
 	align-items: center;
 }
 .background h1 {
+	font-family: 'Bellefair', sans-serif;
 	margin-top: 3rem;
 	font-size: 3rem;
 	color: #916137;
@@ -41,7 +42,10 @@ form {
 form h2 {
 	font-size: 2rem;
 	margin-bottom: 2rem;
+	font-weight: 450;
 }
+
+
 form div {
 	width: 100%;
 	display: flex;
@@ -101,6 +105,11 @@ form a {
 	color: #fff;
 	margin-top: 1rem;
 	transition: text-decoration 0.2s linear;
+}
+
+form p {
+	font-size: 1.5rem;
+	font-weight: 100;
 }
 form a:hover {
 	color: #fff;
