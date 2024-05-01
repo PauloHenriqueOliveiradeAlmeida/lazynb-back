@@ -6,7 +6,7 @@
 
 .background {
 	background-color: #f7f7f7;
-	font-family: "Poppins", sans-serif;
+	font-family: 'Bellefair', sans-serif;
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
@@ -41,6 +41,7 @@ form {
 form h2 {
 	font-size: 2rem;
 	margin-bottom: 2rem;
+	font-weight: 100;
 }
 form div {
 	width: 100%;
