@@ -1,8 +1,8 @@
 <?php
 
-require_once "connection.php";
+require_once "database/connection.php";
 
-class Collaborators
+class Collaborator
 {
 	public int $id;
 	public string $name;
@@ -29,7 +29,8 @@ class Collaborators
 		);
 		return $query;
 	}
-	public function setPermission($is_admin){
+	public function setPermission($is_admin)
+	{
 		$this->is_admin = $is_admin;
 	}
 	public function setPassword($password)
@@ -45,7 +46,8 @@ class Collaborators
 	public function selectAll()
 	{
 		$connection = new Connection();
-		$query = $connection->queryDB("SELECT * FROM collaborators");
+		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators");
+		return $query->fetch_all(MYSQLI_ASSOC);
 	}
 
 	public function selectById()
