@@ -43,6 +43,54 @@ class Collaborator
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators");
-		return $query->fetch_all(MYSQLI_ASSOC);
+		print_r($query->fetch_all());
+	}
+	public function delete()
+	{
+		$connection = new Connection();
+		$query = $connection->queryDB("DELETE FROM collaborators WHERE id = ?", [$this->id]);
+		return $query;
+	}
+	public function selectById($id)
+	{
+		$connection = new Connection();
+		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators WHERE id = ?", [$id]);
+		return $query->fetch_all();
+
+	}
+
+	public function update($id)
+	{
+		$connection = new Connection();
+		$query = $connection->queryDB(
+			"UPDATE collaborators SET name=?, CPF=?, phone_number=?, email=?, password=?, is_admin=? WHERE id = ?",
+			[
+				$this->name,
+				$this->CPF,
+				$this->phone_number,
+				$this->email,
+				$this->is_admin,
+				$this->password,
+				$id
+			]
+		);
+		return $query;
+	}
+
+	public function patch()
+	{
+		$connection = new Connection();
+		$query = $connection->queryDB(
+			"UPDATE collaborators SET name=?, CPF=?, phone_number=?, email=?, is_admin=? WHERE id = ?",
+			[
+				$this->name,
+				$this->CPF,
+				$this->phone_number,
+				$this->email,
+				$this->is_admin,
+				$this->id
+			]
+		);
+		return $query;
 	}
 }

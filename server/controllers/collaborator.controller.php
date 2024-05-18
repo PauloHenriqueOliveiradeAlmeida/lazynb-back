@@ -30,9 +30,42 @@ class CollaboratorController
 		}
 	}
 
-	public static function getAll() {
-		$collaborator = new Collaborator();
+	public static function getAll()
+	{
+		try {
+			$collaborator = new Collaborator();
+			return $collaborator->selectAll();
+		} catch (mysqli_sql_exception $e) {
+			return ($e->getCode());
+		}
+	}
 
-		return $collaborator->selectAll();
+	public static function getById($id)
+	{
+		try {
+			$collaborator = new Collaborator();
+			return $collaborator->selectById($id);
+		} catch (mysqli_sql_exception $e) {
+			return ($e->getCode());
+		}
+	}
+
+	public static function update($id, array $data)
+	{
+		try {
+			$collaborator = new Collaborator();
+
+			$collaborator->name = $data['name'];
+			$collaborator->CPF = $data['CPF'];
+			$collaborator->email = $data['email'];
+			$collaborator->phone_number = $data['phone_number'];
+			$collaborator->setPassword($data['password']);
+			$collaborator->setPermission($data['is_admin']);
+			$collaborator->update($id);
+
+			header("location: ../../visualizar-colaboradores.php?status=201");
+		} catch (mysqli_sql_exception $e) {
+			return ($e->getCode());
+		}
 	}
 }
