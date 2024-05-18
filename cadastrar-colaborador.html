@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="style.css">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bellefair&display=swap">
+		<link rel="stylesheet" href="assets/styles/style.css" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bellefair&display=swap" />
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 		<title>Cadastro de colaborador</title>
 	</head>
 	<body>
@@ -20,7 +20,7 @@
 
 				<div>
 					<label for="cpf">CPF</label>
-					<input class="input" type="text" id="cpf" name="CPF" required />
+					<input class="input" type="text" onfocus="clearMask(this)" onchange="maskCpf(this)" id="cpf" name="CPF" required />
 				</div>
 
 				<div>
@@ -34,27 +34,26 @@
 				</div>
 
 				<div>
-                    <label>Administrador?</label>
-                <label>
-                    <input class="input" type="radio" name="is_admin" value="true" checked>
-                    Sim
-                </label>
-                <label>
-                    <input class="input" type="radio" name="is_admin" value="false">
-                    Não
-                </label>
-				<button type="submit" class="button">Fazer Cadastro</button>
-                </div>
+					<label>Administrador?</label>
+					<label>
+						<input class="input" type="radio" name="is_admin" value="true" checked />
+						Sim
+					</label>
+					<label>
+						<input class="input" type="radio" name="is_admin" value="false" />
+						Não
+					</label>
+				</div>
 
 				<button type="submit" class="button"><span>Fazer Cadastro</span></button>
 			</form>
 
 			<div class="details">
-				<img src="assets/logo/logo.jpeg" alt="Imagem de Login" width="600" height="600"/>
+				<img src="assets/images/logo/logo.jpeg" alt="Imagem de Login" width="600" height="600" />
 			</div>
 		</div>
 
-		<script type="module" src="assets/scripts/validation.js"></script>
-		<script type="module" src="assets/scripts/toast.js"></script>
+		<script type="module" src="assets/scripts/services/validation.service.js"></script>
+		<script src="assets/scripts/utils/mask-cpf.util.js"></script>
 	</body>
 </html>

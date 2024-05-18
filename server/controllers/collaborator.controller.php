@@ -20,11 +20,11 @@ class CollaboratorController
 
 			$collaborator->create();
 
-			header("location: ../../cadastrar-colaborador.html?sucess=true");
+			header("location: ../../visualizar-colaboradores.php?status=201");
 		} catch (mysqli_sql_exception $e) {
 			switch ($e->getCode()) {
 				case 1062:
-					header("location: ../../cadastrar-colaborador.html?error=409");
+					header("location: ../../visualizar-colaboradores.php?status=409");
 					break;
 			}
 		}

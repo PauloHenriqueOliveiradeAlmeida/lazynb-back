@@ -17,7 +17,7 @@ export function toast(message, type = "sucess") {
 			background: toastifyTypes[type],
 			fontSize: "1.2rem",
 			padding: "1rem",
-			color: type === "sucess" ? "#1E1E1E" : "#f7f7f7"
+			color: type === "sucess" ? "#1E1E1E" : "#F7F7F7"
 		}
 	}).showToast();
 }
