@@ -1,23 +1,20 @@
 <?php
 
-require_once __DIR__ . "/../models/collaborator.model.php";
-require_once __DIR__ . "/../utils/requestIsEmpty.php";
-require_once __DIR__ . "/../utils/generate-random-password.php";
+require_once __DIR__ . "/../../models/database/collaborator.model.php";
+require_once "collaborator.dto.php";
+require_once __DIR__ . "/../../utils/request-is-empty.php";
+require_once __DIR__ . "/../../utils/generate-random-password.php";
 
 class CollaboratorController
 {
 	public static function create(array $data)
 	{
 		try {
-			$collaborator = new Collaborator();
-
-			$collaborator->name = $data['name'];
-			$collaborator->CPF = $data['CPF'];
-			$collaborator->email = $data['email'];
-			$collaborator->phone_number = $data['phone_number'];
-			$collaborator->setPermission($data['is_admin']);
+			$dto = new CollaboratorDTO(...$data);
+			$dto = $dto->get();
+			$collaborator = new Collaborator(...$dto);
 			$collaborator->setPassword("");
-
+			$collaborator->setPermission(true);
 			$collaborator->create();
 
 			header("location: ../../visualizar-colaboradores.php?status=201");

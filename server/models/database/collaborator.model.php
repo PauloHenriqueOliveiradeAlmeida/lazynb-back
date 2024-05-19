@@ -1,16 +1,24 @@
 <?php
 
-require_once "database/connection.php";
+require_once "configuration/connection.php";
 
 class Collaborator
 {
-	public int $id;
-	public string $name;
-	public string $CPF;
-	public string $phone_number;
-	public string $email;
-	private string $password;
-	private bool $is_admin;
+	public readonly string $name;
+	public readonly string $CPF;
+	public readonly string $phone_number;
+	public readonly string $email;
+	private readonly string $password;
+	private readonly bool $is_admin;
+
+
+	public function __construct(?string $name = null, ?string $CPF = null, ?string $phone_number = null, ?string $email = null)
+	{
+		$this->name = $name;
+		$this->CPF = $CPF;
+		$this->phone_number = $phone_number;
+		$this->email = $email;
+	}
 
 	public function setPermission($is_admin)
 	{
