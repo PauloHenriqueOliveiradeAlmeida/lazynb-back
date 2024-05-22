@@ -1,34 +1,17 @@
 <?php
-
+require_once __DIR__ . '/../../models/dto/dto.base.php';
 require_once __DIR__ . "/../../models/validator/string.validator.php";
 require_once __DIR__ . "/../../models/validator/boolean.validator.php";
 
-class CollaboratorDTO {
+class CollaboratorDTO extends DTO {
 
-	private readonly string $name;
-	private readonly string $CPF;
-	private readonly string $email;
-	private readonly string $phone_number;
-
-	public function __construct(string $name, string $CPF, string $email, string $phone_number, bool $is_admin) {
-		$v_name = new StringValidator($name);
-		$v_CPF = new StringValidator($CPF);
-		$v_email = new StringValidator($email);
-		$v_phone_number = new StringValidator($phone_number);
-
-		$this->name = $v_name->isRequired()->get();
-		$this->CPF = $v_CPF->isRequired()->get();
-		$this->email = $v_email->isRequired()->isEmail()->get();
-		$this->phone_number = $v_phone_number->isRequired()->get();
+	public static function validate(string $name, string $CPF, string $email, string $phone_number, string $password, bool $is_admin) {
+		$name = StringValidator::set($name)->isRequired()->get();
+		$CPF = StringValidator::set($CPF)->isRequired()->get();
+		$email = StringValidator::set($email)->isRequired()->isEmail()->get();
+		$phone_number = StringValidator::set($phone_number)->isRequired()->get();
+		$is_admin = BooleanValidator::set($is_admin)->isRequired()->get();
+		$password = StringValidator::set($password)->isRequired()->get();
+		return func_get_args();
 	}
-
-	public function get() {
-		return [
-			$this->name,
-			$this->CPF,
-			$this->email,
-			$this->phone_number
-		];
-	}
-
 }
