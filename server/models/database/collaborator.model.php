@@ -24,6 +24,7 @@ class Collaborator
 
 	public function create()
 	{
+		echo $this->phone_number;
 		$connection = new Connection();
 
 		$query = $connection->queryDB(
