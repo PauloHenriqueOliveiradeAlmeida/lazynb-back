@@ -3,13 +3,12 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="assets/styles/style.css" />
 		<title>Editar Colaboradores</title>
-		<script src="script.js"></script>
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bellefair&display=swap">
 
 	</head>
-	<body>
+	<body id="body">
 		<div class="background">
 			<form>
 				<h2>Editar Colaboradores</h2>
@@ -19,7 +18,7 @@
 				</div>
 				<div>
 					<label for="CPF">CPF do colaborador:</label>
-					<input class="input" type="text" id="CPF" required />
+					<input class="input" type="module" id="CPF" required />
 				</div>
 				<div>
 					<label for="telefone">Telefone:</label>
@@ -45,8 +44,9 @@
 			</form>
 
 			<div class="details">
-				<img src="assets/logo/logo.jpeg" alt="Imagem de Login" width="600" height="600"/>
+				<img src="assets/images/logo/logo.jpeg" alt="Imagem de Login" width="600" height="600"/>
 			</div>
 		</div>
+		<script src="assets/scripts/events/editar-colaboradores.events.js" type="module"></script>
 	</body>
 </html>
