@@ -13,4 +13,5 @@ class CollaboratorDTO extends DTO {
 		$is_admin = BooleanValidator::set($is_admin)->isRequired()->get();
 		return self::get(self::class, func_get_args());
 	}
+
 }

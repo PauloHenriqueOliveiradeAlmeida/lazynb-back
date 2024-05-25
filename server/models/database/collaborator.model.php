@@ -12,7 +12,7 @@ class Collaborator
 	private readonly bool $is_admin;
 
 
-	public function __construct(?string $name = null, ?string $CPF = null, ?string $phone_number = null, ?string $email = null, ?bool $is_admin = null, ?string $password = null)
+	public function __construct(?string $name = '', ?string $CPF = '', ?string $phone_number = '', ?string $email = '', ?bool $is_admin = false, ?string $password = '')
 	{
 		$this->name = $name;
 		$this->CPF = $CPF;
@@ -45,6 +45,54 @@ class Collaborator
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators");
-		return $query->fetch_all(MYSQLI_ASSOC);
+		print_r($query->fetch_all());
+	}
+	public function delete($id)
+	{
+		$connection = new Connection();
+		$query = $connection->queryDB("DELETE FROM collaborators WHERE id = ?", [$id]);
+		return $query;
+	}
+	public function selectById($id)
+	{
+		$connection = new Connection();
+		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators WHERE id = ?", [$id]);
+		print_r($query->fetch_all());
+
+	}
+
+	public function update($id)
+	{
+		$connection = new Connection();
+		$query = $connection->queryDB(
+			"UPDATE collaborators SET name=?, CPF=?, phone_number=?, email=?, password=?, is_admin=? WHERE id = ?",
+			[
+				$this->name,
+				$this->CPF,
+				$this->phone_number,
+				$this->email,
+				$this->is_admin,
+				$this->password,
+				$id
+			]
+		);
+		return $query;
+	}
+
+	public function patch($id)
+	{
+		$connection = new Connection();
+		$query = $connection->queryDB(
+			"UPDATE collaborators SET name=?, CPF=?, phone_number=?, email=?, is_admin=? WHERE id = ?",
+			[
+				$this->name,
+				$this->CPF,
+				$this->phone_number,
+				$this->email,
+				$this->is_admin,
+				$id
+			]
+		);
+		return $query;
 	}
 }
