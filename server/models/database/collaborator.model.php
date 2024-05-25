@@ -1,28 +1,30 @@
 <?php
 
-require_once "database/connection.php";
+require_once "configuration/connection.php";
 
 class Collaborator
 {
-	public int $id;
-	public string $name;
-	public string $CPF;
-	public string $phone_number;
-	public string $email;
-	private string $password;
-	private bool $is_admin;
+	private readonly string $name;
+	private readonly string $CPF;
+	private readonly string $phone_number;
+	private readonly string $email;
+	private readonly string $password;
+	private readonly bool $is_admin;
 
-	public function setPermission($is_admin)
+
+	public function __construct(?string $name = null, ?string $CPF = null, ?string $phone_number = null, ?string $email = null, ?bool $is_admin = null, ?string $password = null)
 	{
+		$this->name = $name;
+		$this->CPF = $CPF;
+		$this->phone_number = $phone_number;
+		$this->email = $email;
 		$this->is_admin = $is_admin;
-	}
-	public function setPassword($password)
-	{
-		$this->password = password_hash($password, PASSWORD_DEFAULT, ["cost" => 15]);
+		$this->password = $password;
 	}
 
 	public function create()
 	{
+		echo $this->phone_number;
 		$connection = new Connection();
 
 		$query = $connection->queryDB(
