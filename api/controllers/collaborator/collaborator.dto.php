@@ -11,7 +11,7 @@ class CollaboratorDTO extends DTO {
 		$email = StringValidator::set($email)->isRequired()->isEmail()->get();
 		$phone_number = StringValidator::set($phone_number)->isRequired()->get();
 		$is_admin = BooleanValidator::set($is_admin)->isRequired()->get();
-		return self::get(self::class, args: func_get_args());
+		return self::get(self::class, func_get_args());
 	}
 
 }

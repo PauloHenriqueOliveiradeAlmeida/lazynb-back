@@ -11,6 +11,7 @@ abstract class DTO {
 		};
 		return $param_arr;
 	}
+
 }
 
 ?>
