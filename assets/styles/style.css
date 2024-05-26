@@ -221,8 +221,8 @@ table tr {
 	padding: 1rem;
 }
 
-.actions .edit {
-	margin-right: 2rem;
+.actions .fa-edit {
+	margin-right: 1rem;
 }
 
 table .empty-card {
