@@ -33,9 +33,8 @@ class CollaboratorController
 		try {
 			$collaborator = new Collaborator();
 
-			return $collaborator->selectAll();
+			echo json_encode($collaborator->selectAll());
 
-			header("location: ../../visualizar-colaboradores.html?status=201");
 		} catch (PDOException $e) {
 			switch ($e->getCode()) {
 				case 1049:
@@ -48,9 +47,8 @@ class CollaboratorController
 	{
 		try {
 			$collaborator = new Collaborator();
-			return $collaborator->selectById($id);
+			echo json_encode($collaborator->selectById($id));
 
-			header("location: ../../visualizar-colaboradores.html?status=201");
 		} catch (PDOException $e) {
 			switch ($e->getCode()) {
 				case 1049:
@@ -110,7 +108,6 @@ class CollaboratorController
 			$collaborator = new Collaborator();
 			return $collaborator->delete($id);
 
-			header("location: ../../visualizar-colaboradores.html?status=201");
 		} catch (PDOException $e) {
 			switch ($e->getCode()) {
 				case 1329:

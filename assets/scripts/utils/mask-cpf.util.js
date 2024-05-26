@@ -1,10 +1,10 @@
-export function maskCpf(input) {
-	if (input.value.length === 11) {
-		input.value = input.value.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+export function maskCpf(value) {
+	if (value.length === 11) {
+		return value.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 	}
 }
 
-export function clearMask(input) {
-	input.value = input.value.replace(/[.\-/]/g, "");
+export function clearMask(value) {
+	return value.replace(/[.\-/]/g, "");
 }
 

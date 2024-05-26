@@ -24,7 +24,6 @@ class Collaborator
 
 	public function create()
 	{
-		echo $this->phone_number;
 		$connection = new Connection();
 
 		$query = $connection->queryDB(
@@ -45,7 +44,7 @@ class Collaborator
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators");
-		print_r($query->fetch_all());
+		return $query->fetch_all(MYSQLI_ASSOC);
 	}
 	public function delete($id)
 	{
@@ -57,7 +56,7 @@ class Collaborator
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators WHERE id = ?", [$id]);
-		print_r($query->fetch_all());
+		return $query->fetch_assoc(MYSQLI_ASSOC);
 
 	}
 
