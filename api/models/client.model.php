@@ -1,6 +1,6 @@
 <?php
 
-require_once "configuration/connection.php";
+require_once "database/connection.php";
 
 class Client
 {
@@ -45,7 +45,7 @@ class Client
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB("SELECT name, email, phone_number, CPF FROM clients WHERE id = ?", [$id]);
-		return $query->fetch_all(MYSQLI_ASSOC);
+		return $query->fetch_assoc() ?? [];
 	}
 
 	public function delete($id)

@@ -1,6 +1,7 @@
 <?php
+require_once __DIR__ . "/../../packages/http-response/http-response.php";
 require_once __DIR__ . "/../../utils/generate-random-password.php";
-require_once __DIR__ . "/../../models/database/collaborator.model.php";
+require_once __DIR__ . "/../../models/collaborator.model.php";
 require_once "collaborator.dto.php";
 
 class CollaboratorController
@@ -15,46 +16,32 @@ class CollaboratorController
 			$collaborator = new Collaborator(...$dto, password: $password);
 			$collaborator->create();
 
-			header("location: ../../visualizar-colaboradores.html?status=201");
+			HttpResponse::send(HttpResponse::CREATED);
 		} catch (PDOException $e) {
 			switch ($e->getCode()) {
 				case 1062:
-					header("location: ../../cadastrar-colaborador.html?status=409");
-					break;
-				case 1049:
-					header("location: ../../cadastrar-colaborador.html?status=404");
-					break;
+					HttpResponse::send(HttpResponse::CONFLICT);
 			}
 		}
 	}
 
-	public static function selectAll()
+	public static function getAll()
 	{
 		try {
 			$collaborator = new Collaborator();
 
 			echo json_encode($collaborator->selectAll());
-
 		} catch (PDOException $e) {
-			switch ($e->getCode()) {
-				case 1049:
-					header("location: ../../visualizar-colaboradores.html?status=404");
-					break;
-			}
+			HttpResponse::sendBody(["error" => $e], HttpResponse::SERVER_ERROR);
 		}
 	}
-	public static function selectById($id)
+	public static function getById($id)
 	{
 		try {
 			$collaborator = new Collaborator();
-			echo json_encode($collaborator->selectById($id));
-
+			HttpResponse::sendBody($collaborator->selectById($id));
 		} catch (PDOException $e) {
-			switch ($e->getCode()) {
-				case 1049:
-					header("location: ../../visualizar-colaboradores.html?status=404");
-					break;
-			}
+			HttpResponse::sendBody(["error" => $e], HttpResponse::SERVER_ERROR);
 		}
 	}
 
@@ -68,15 +55,13 @@ class CollaboratorController
 			$collaborator = new Collaborator(...$dto, password: $password);
 			$collaborator->update($id);
 
-			header("location: ../../visualizar-colaboradores.php?status=201");
+			HttpResponse::send();
 		} catch (PDOException $e) {
 			switch ($e->getCode()) {
 				case 1062:
-					header("location: ../../editar-colaborador.html?status=409");
-					break;
+					HttpResponse::send(HttpResponse::CONFLICT);
 				case 1049:
-					header("location: ../../editar-colaborador.html?status=404");
-					break;
+					HttpResponse::send(HttpResponse::NOT_FOUND);
 			}
 		}
 	}
@@ -89,15 +74,13 @@ class CollaboratorController
 
 			$collaborator->patch($id);
 
-			header("location: ../../visualizar-colaboradores.html?status=201");
+			HttpResponse::send();
 		} catch (PDOException $e) {
 			switch ($e->getCode()) {
 				case 1062:
-					header("location: ../../editar-colaborador.html?status=409");
-					break;
+					HttpResponse::send(HttpResponse::CONFLICT);
 				case 1049:
-					header("location: ../../editar-colaborador.html?status=404");
-					break;
+					HttpResponse::send(HttpResponse::NOT_FOUND);
 			}
 		}
 	}
@@ -106,15 +89,15 @@ class CollaboratorController
 	{
 		try {
 			$collaborator = new Collaborator();
-			return $collaborator->delete($id);
+			$collaborator->delete($id);
 
+			HttpResponse::send();
 		} catch (PDOException $e) {
 			switch ($e->getCode()) {
 				case 1329:
-					header("location: ../../deletar-colaborador.html?status=404");
+					HttpResponse::send(HttpResponse::NOT_FOUND);
 				case 1049:
-					header("location: ../../deletar-colaborador.html?status=404");
-					break;
+					HttpResponse::send(HttpResponse::NOT_FOUND);
 			}
 		}
 	}

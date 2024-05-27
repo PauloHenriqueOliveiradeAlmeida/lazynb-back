@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . "/../../utils/generate-random-password.php";
-require_once __DIR__ . "/../../models/database/client.model.php";
-require_once __DIR__ . "/../../models/update-manager/update-manager.model.php";
+require_once __DIR__ . "/../../models/client.model.php";
+require_once __DIR__ . "/../../packages/update-manager/update-manager.php";
+require_once __DIR__ . "/../../packages/http-response/http-response.php";
 require_once "client.dto.php";
 
 class ClientController
@@ -12,12 +13,12 @@ class ClientController
 			$dto = ClientDTO::validate(...$data);
 			$client = new Client(...$dto);
 			$client->create();
-			header("location: ../../visualizar-colaboradores.html?status=201");
+
+			HttpResponse::send(HttpResponse::CREATED);
 		} catch (mysqli_sql_exception $e) {
 			switch ($e->getCode()) {
 				case 1062:
-					header("location: ../../visualizar-colaboradores.html?status=409");
-					break;
+					HttpResponse::send(HttpResponse::CONFLICT);
 			}
 		}
 	}
@@ -26,9 +27,9 @@ class ClientController
 	{
 		try {
 			$client = new Client();
-			echo json_encode($client->selectAll());
+			HttpResponse::sendBody($client->selectAll());
 		} catch (mysqli_sql_exception $e) {
-			throw $e;
+			HttpResponse::sendBody(["error" => $e], HttpResponse::SERVER_ERROR);
 		}
 	}
 
@@ -36,9 +37,9 @@ class ClientController
 	{
 		try {
 			$client = new Client();
-			echo json_encode($client->selectById($id));
+			HttpResponse::sendBody($client->selectById($id));
 		} catch (mysqli_sql_exception $e) {
-			throw $e;
+			HttpResponse::sendBody(["error" => $e], HttpResponse::SERVER_ERROR);
 		}
 	}
 
@@ -52,9 +53,9 @@ class ClientController
 			$client = new Client(...$reflected_dto);
 			$client->update($id);
 
-			header("location: ../../visualizar-colaboradores.php?status=201");
+			HttpResponse::send();
 		} catch (mysqli_sql_exception $e) {
-			return ($e->getCode());
+			HttpResponse::sendBody(["error" => $e], HttpResponse::SERVER_ERROR);
 		}
 	}
 
@@ -64,9 +65,9 @@ class ClientController
 			$client = new Client();
 			$client->delete($id);
 
-			header("location: ../../visualizar-colaboradores.php?status=201");
+			HttpResponse::send();
 		} catch (mysqli_sql_exception $e) {
-			return ($e->getCode());
+			HttpResponse::sendBody(["error" => $e], HttpResponse::SERVER_ERROR);
 		}
 	}
 }

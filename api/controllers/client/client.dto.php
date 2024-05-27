@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../../models/dto/dto.base.php';
-require_once __DIR__ . "/../../models/validator/string.validator.php";
-require_once __DIR__ . "/../../models/validator/boolean.validator.php";
+require_once __DIR__ . '/../../packages/dto/dto.base.php';
+require_once __DIR__ . "/../../packages/validator/string.validator.php";
+require_once __DIR__ . "/../../packages/validator/boolean.validator.php";
 
 class ClientDTO extends DTO {
 

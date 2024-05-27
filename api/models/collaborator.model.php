@@ -1,6 +1,6 @@
 <?php
 
-require_once "configuration/connection.php";
+require_once "database/connection.php";
 
 class Collaborator
 {
@@ -56,7 +56,7 @@ class Collaborator
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators WHERE id = ?", [$id]);
-		return $query->fetch_assoc(MYSQLI_ASSOC);
+		return $query->fetch_assoc() ?? [];
 
 	}
 
