@@ -47,7 +47,7 @@ class Route
 			}
 		}
 
-		if ($this->request_method === "POST") {
+		if ($this->request_method === "PUT") {
 			if ($this->sanitizeUrl($this->request_uri) === $formmated_endpoint) {
 				return $this->controller::{$callback}(...$params);
 			}

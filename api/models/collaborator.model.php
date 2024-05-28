@@ -9,10 +9,10 @@ class Collaborator
 	private readonly string $phone_number;
 	private readonly string $email;
 	private readonly string $password;
-	private readonly bool $is_admin;
+	private readonly int $is_admin;
 
 
-	public function __construct(?string $name = '', ?string $CPF = '', ?string $phone_number = '', ?string $email = '', ?bool $is_admin = false, ?string $password = '')
+	public function __construct(?string $name = '', ?string $CPF = '', ?string $phone_number = '', ?string $email = '', ?int $is_admin = 0, ?string $password = '')
 	{
 		$this->name = $name;
 		$this->CPF = $CPF;
@@ -25,7 +25,7 @@ class Collaborator
 	public function create()
 	{
 		$connection = new Connection();
-
+		echo "INSERT INTO collaborators (name, CPF, phone_number, email, is_admin, password) VALUES ({$this->name}, {$this->CPF}, {$this->phone_number}, {$this->email}, {$this->is_admin}, {$this->password})";
 		$query = $connection->queryDB(
 			"INSERT INTO collaborators (name, CPF, phone_number, email, is_admin, password) VALUES (?, ?, ?, ?, ?, ?)",
 			[
@@ -43,21 +43,22 @@ class Collaborator
 	public function selectAll()
 	{
 		$connection = new Connection();
-		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators");
+		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF, is_admin FROM collaborators");
 		return $query->fetch_all(MYSQLI_ASSOC);
 	}
+
+	public function selectById($id)
+	{
+		$connection = new Connection();
+		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF, is_admin FROM collaborators WHERE id = ?", [$id]);
+		return $query->fetch_assoc() ?? [];
+	}
+
 	public function delete($id)
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB("DELETE FROM collaborators WHERE id = ?", [$id]);
 		return $query;
-	}
-	public function selectById($id)
-	{
-		$connection = new Connection();
-		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM collaborators WHERE id = ?", [$id]);
-		return $query->fetch_assoc() ?? [];
-
 	}
 
 	public function update($id)

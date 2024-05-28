@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<div class="background">
-			<form method="post" action="./server/routes/collaborator.route.php">
+			<form id="form">
 				<h2>Cadastrar colaborador</h2>
 				<div>
 					<label for="nome">Nome Completo:</label>
@@ -20,7 +20,7 @@
 
 				<div>
 					<label for="cpf">CPF</label>
-					<input class="input" type="text" onfocus="clearMask(this)" onchange="maskCpf(this)" id="cpf" name="CPF" required />
+					<input class="input" type="text" id="cpf" name="CPF" required />
 				</div>
 
 				<div>
@@ -53,7 +53,6 @@
 			</div>
 		</div>
 
-		<script type="module" src="assets/scripts/services/validation.service.js"></script>
-		<script src="assets/scripts/utils/mask-cpf.util.js"></script>
+		<script type="module" src="./assets/scripts/events/cadastrar-colaboradores.event.js"></script>
 	</body>
 </html>

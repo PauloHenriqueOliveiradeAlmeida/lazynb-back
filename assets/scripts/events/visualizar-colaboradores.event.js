@@ -1,12 +1,21 @@
 import { addTableData, clearTable } from '../handlers/table.handler.js';
+import { handleException } from '../services/handle-exception.service.js';
 import { request } from '../services/request.service.js';
 import { maskCpf, clearMask } from '../utils/mask-cpf.util.js';
 
 let collaborators = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
-	collaborators = await request('server/routes/collaborator.route.php', 'GET');
-	collaborators.forEach((collaborator) => addTableData('table', collaborator));
+	try {
+		collaborators = (await request('api/collaborators', 'GET')).data;
+		collaborators.forEach((collaborator) => addTableData('table', {
+			...collaborator,
+			is_admin: collaborator.is_admin ? 'SIM' : 'NÃO'
+		}, 'editar-colaborador.html', 'api/collaborators'));
+	}
+	catch(error) {
+		handleException(error);
+	}
 });
 
 const mask = (event) => maskCpf(event.target.value);
@@ -17,7 +26,10 @@ document.getElementById('search').addEventListener('input', (event) => {
 
 	if (!event.target.value) {
 		clearTable('table');
-		collaborators.forEach(collaborator => addTableData('table', collaborator));
+		collaborators.forEach(collaborator => addTableData('table', {
+			...collaborator,
+			is_admin: collaborator.is_admin ? 'SIM' : 'NÃO'
+		}, 'editar-colaborador.html', 'api/collaborators'));
 	}
 
 	const filtered_collaborators = collaborators.filter(collaborator => {
@@ -26,7 +38,10 @@ document.getElementById('search').addEventListener('input', (event) => {
 		return search_field.toLowerCase().includes(searched);
 	});
 	clearTable('table');
-	filtered_collaborators.forEach(collaborator => addTableData('table', collaborator));
+	filtered_collaborators.forEach(collaborator => addTableData('table', {
+		...collaborator,
+		is_admin: collaborator.is_admin ? 'SIM' : 'NÃO'
+	}, 'editar-colaborador.html', 'api/collaborators'));
 });
 
 document.getElementById('filter-type').addEventListener('change', (event) => {
@@ -46,7 +61,10 @@ document.getElementById('clear-search').addEventListener('click', () => {
 	document.getElementById('search').value = '';
 
 	clearTable('table');
-	collaborators.forEach(collaborator => addTableData('table', collaborator));
+	collaborators.forEach(collaborator => addTableData('table', {
+		...collaborator,
+		is_admin: collaborator.is_admin ? 'SIM' : 'NÃO'
+	}, 'editar-colaborador.html', 'api/collaborators'));
 });
 
 

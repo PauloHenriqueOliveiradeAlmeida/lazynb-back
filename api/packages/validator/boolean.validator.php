@@ -11,5 +11,4 @@ class BooleanValidator extends Validator {
 	public static function set(string $data) {
 		return new static($data);
 	}
-
 }
