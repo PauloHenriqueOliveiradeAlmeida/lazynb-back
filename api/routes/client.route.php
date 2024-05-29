@@ -8,5 +8,5 @@ Route::endpoint('/clients', ClientController::class)->methods(function (Route $r
 	$route->put(endpoint: ':id', callback: 'update', params: $_POST);
 	$route->get('getAll');
 	$route->get(endpoint: ':id', callback: 'getById');
-	$route->delete('delete');
+	$route->delete(endpoint: ':id', callback: 'delete');
 });
