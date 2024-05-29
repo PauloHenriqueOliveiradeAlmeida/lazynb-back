@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . "/../packages/route/route.php";
-require_once __DIR__ . "/../packages/request/request.php";
-require_once  __DIR__ . "/../controllers/collaborator/collaborator.controller.php";
+require_once __DIR__ . "/../../shared/packages/route/route.php";
+require_once __DIR__ . "/../../shared/packages/request/request.php";
+require_once "collaborator.controller.php";
 
 Route::endpoint('/collaborators', CollaboratorController::class)->methods(function(Route $route) {
 	$route->post('create', params: Request::body());

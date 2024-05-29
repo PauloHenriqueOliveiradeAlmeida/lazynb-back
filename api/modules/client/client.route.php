@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . "/../packages/route/route.php";
-require_once __DIR__ . "/../controllers/client/client.controller.php";
+require_once __DIR__ . "/../../shared/packages/route/route.php";
+require_once "client.controller.php";
 
 Route::endpoint('/clients', ClientController::class)->methods(function (Route $route) {
 	$route->post('create', params: $_POST);

@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . "/../../packages/http-response/http-response.php";
-require_once __DIR__ . "/../../utils/generate-random-password.php";
-require_once __DIR__ . "/../../models/collaborator.model.php";
+require_once __DIR__ . "/../../shared/packages/http-response/http-response.php";
+require_once __DIR__ . "/../../shared/utils/random-password.php";
+require_once "database/collaborator.model.php";
 require_once "collaborator.dto.php";
 
 class CollaboratorController

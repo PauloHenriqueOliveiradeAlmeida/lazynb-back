@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . "/../../utils/generate-random-password.php";
-require_once __DIR__ . "/../../models/client.model.php";
-require_once __DIR__ . "/../../packages/update-manager/update-manager.php";
-require_once __DIR__ . "/../../packages/http-response/http-response.php";
+require_once __DIR__ . "/../../shared/utils/random-password.php";
+require_once __DIR__ . "/../../shared/packages/update-manager/update-manager.php";
+require_once __DIR__ . "/../../shared/packages/http-response/http-response.php";
+require_once "database/client.model.php";
 require_once "client.dto.php";
 
 class ClientController

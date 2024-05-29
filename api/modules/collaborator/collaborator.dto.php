@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../../packages/dto/dto.base.php';
-require_once __DIR__ . "/../../packages/validator/string.validator.php";
-require_once __DIR__ . "/../../packages/validator/boolean.validator.php";
+require_once __DIR__ . '/../../shared/packages/dto/dto.base.php';
+require_once __DIR__ . "/../../shared/packages/validator/string.validator.php";
+require_once __DIR__ . "/../../shared/packages/validator/boolean.validator.php";
 
 class CollaboratorDTO extends DTO {
 
