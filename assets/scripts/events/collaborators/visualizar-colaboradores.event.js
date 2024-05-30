@@ -1,7 +1,7 @@
-import { addTableData, clearTable } from '../handlers/table.handler.js';
-import { handleException } from '../services/handle-exception.service.js';
-import { request } from '../services/request.service.js';
-import { maskCpf, clearMask } from '../utils/mask-cpf.util.js';
+import { addTableData, clearTable } from '../../handlers/table.handler.js';
+import { handleException } from '../../services/handle-exception.service.js';
+import { request } from '../../services/request.service.js';
+import { maskCpf, clearMask } from '../../utils/mask-cpf.util.js';
 
 let collaborators = [];
 

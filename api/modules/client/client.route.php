@@ -10,5 +10,5 @@ Route::endpoint('/clients', ClientController::class)->withAuth(Auth::class)->met
 	$route->put(endpoint: ':id', callback: 'update', params: Request::body());
 	$route->get('getAll');
 	$route->get(endpoint: ':id', callback: 'getById');
-	$route->delete('delete');
+	$route->delete(endpoint: ':id', callback: 'delete');
 });

@@ -1,16 +1,16 @@
-import { getFormData, fillForm } from '../handlers/form.handler.js';
-import { handleException } from '../services/handle-exception.service.js';
-import { request } from '../services/request.service.js';
-import { clearMask, maskCpf } from '../utils/mask-cpf.util.js';
+import { getFormData, fillForm } from '../../handlers/form.handler.js';
+import { handleException } from '../../services/handle-exception.service.js';
+import { request } from '../../services/request.service.js';
+import { clearMask, maskCpf } from '../../utils/mask-cpf.util.js';
 
 const id = new URLSearchParams(window.location.search).get('id');
 document.addEventListener('DOMContentLoaded', async () => {
 
 	try {
-		const collaborator = await request(`api/collaborators?id=${id}`, 'GET');
+		const client = await request(`api/clients?id=${id}`, 'GET');
 		fillForm('form', {
-			...collaborator.data,
-			is_admin: !!collaborator.data.is_admin
+			...client.data,
+			is_admin: !!client.data.is_admin
 		});
 	}
 	catch(error) {
@@ -21,17 +21,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.getElementById('form').addEventListener('submit', async (e) => {
 	e.preventDefault();
 	const datas = getFormData('form');
-	const update_collaborator = await request(`api/collaborators?id=${id}`, 'PATCH', {
+	const update_client = await request(`api/clients?id=${id}`, 'PUT', {
 		...datas,
 		is_admin: datas.is_admin === 'true'
 	});
-	const updated = update_collaborator.status;
+	const updated = update_client.status;
 
 	if (updated === 200) {
-		window.location.href = 'visualizar-colaboradores.html';
+		window.location.href = 'visualizar-clientes.html';
 	}
 	else {
-		handleException(update_collaborator);
+		handleException(update_clients);
 	}
 });
 
