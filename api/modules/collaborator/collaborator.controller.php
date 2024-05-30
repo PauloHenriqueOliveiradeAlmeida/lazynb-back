@@ -1,8 +1,10 @@
 <?php
 require_once __DIR__ . "/../../shared/packages/http-response/http-response.php";
-require_once __DIR__ . "/../../shared/utils/random-password.php";
+require_once __DIR__ . "/../../shared/utils/random-password/random-password.php";
+require_once __DIR__ . "/../../shared/auth/auth.service.php";
 require_once "database/collaborator.model.php";
-require_once "collaborator.dto.php";
+require_once "dtos/login.dto.php";
+require_once "dtos/collaborator.dto.php";
 
 class CollaboratorController
 {
@@ -10,13 +12,14 @@ class CollaboratorController
 	{
 		try {
 			$dto = CollaboratorDTO::validate(...$data);
-			$password = password_hash(RandomPassword::generate(), PASSWORD_DEFAULT, [
+			$random_password = RandomPassword::generate();
+			$password = password_hash($random_password, PASSWORD_DEFAULT, [
 				'cost' => 15
 			]);
 			$collaborator = new Collaborator(...$dto, password: $password);
 			$collaborator->create();
 
-			HttpResponse::send(HttpResponse::CREATED);
+			HttpResponse::sendBody(["message" => $random_password], HttpResponse::CREATED);
 		} catch (mysqli_sql_exception $e) {
 			switch ($e->getCode()) {
 				case 1062:
@@ -103,5 +106,32 @@ class CollaboratorController
 					HttpResponse::send(HttpResponse::NOT_FOUND);
 			}
 		}
+	}
+
+	public static function login(array $data) {
+		try {
+			$dto = LoginDTO::validate(...$data);
+			$collaborator = new Collaborator();
+			$collaborator_datas = $collaborator->selectByEmail($dto['email']);
+
+			if (count($collaborator_datas) === 0) {
+				HttpResponse::sendBody([
+					'message' => 'Não há nenhum registro com esse email, tente outro email'
+				], HttpResponse::NOT_FOUND);
+			}
+
+			Auth::login($collaborator_datas, $data['password']);
+
+			HttpResponse::send();
+		}
+		catch(mysqli_sql_exception $error) {
+			HttpResponse::sendBody(["message" => $error->getMessage()], HttpResponse::SERVER_ERROR);
+		}
+	}
+
+	public static function logout() {
+		echo "la";
+		Auth::logout();
+		HttpResponse::send(HttpResponse::NO_CONTENT);
 	}
 }

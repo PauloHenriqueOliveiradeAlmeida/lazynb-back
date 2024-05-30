@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 	}
 });
 
-const mask = (event) => maskCpf(event.target.value);
-const unmask = (event) => clearMask(event.target.value);
+function mask(event) { maskCpf(event.target.value); }
+function unmask(event) { clearMask(event.target.value); }
 
 document.getElementById('search').addEventListener('input', (event) => {
 	const search_type = document.getElementById('filter-type').value;

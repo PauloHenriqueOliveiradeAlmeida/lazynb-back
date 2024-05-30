@@ -1,6 +1,6 @@
 <?php
 
-require_once "database/connection.php";
+require_once __DIR__ . "/../../../shared/database/connection.php";
 
 class Client
 {
