@@ -8,17 +8,17 @@
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 	<link rel="stylesheet" href="assets/styles/style.css" />
-	<title>Visualizar colaboradores</title>
+	<title>Visualizar Clientes</title>
 </head>
 
 <body id="body">
 	<div class="background visualizer-container">
 		<div class="filter-container">
 			<div>
-				<input type="text" placeholder="Nome do colaborador" class="input" id="search" />
+				<input type="text" placeholder="Nome do Cliente" class="input" id="search" />
 				<select name="type" class="input" id="filter-type">
-					<option value="name" selected>Nome do colaborador</option>
-					<option value="CPF">CPF do colaborador</option>
+					<option value="name" selected>Nome do cliente</option>
+					<option value="CPF">CPF do cliente</option>
 				</select>
 			</div>
 			<button id="clear-search" class="button"><span>Limpar busca</span></button>
@@ -31,7 +31,6 @@
 						<th>Email:</th>
 						<th>Telefone:</th>
 						<th>CPF:</th>
-						<th>Administrador</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -41,7 +40,7 @@
 			</table>
 		</div>
 	</div>
-	<script type="module" src="assets/scripts/events/collaborators/visualizar-colaboradores.event.js"></script>
+	<script type="module" src="assets/scripts/events/clients/visualizar-clientes.js"></script>
 </body>
 
 </html>

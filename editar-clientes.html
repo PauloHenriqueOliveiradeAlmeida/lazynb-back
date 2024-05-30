@@ -11,13 +11,13 @@
 	<body id="body">
 		<div class="background">
 			<form id="form">
-				<h2>Editar Colaboradores</h2>
+				<h2>Editar Clientes</h2>
 				<div>
-					<label for="nome">Nome do colaborador:</label>
+					<label for="nome">Nome do Cliente:</label>
 					<input class="input" type="text" id="name" name="name" required />
 				</div>
 				<div>
-					<label for="CPF">CPF do colaborador:</label>
+					<label for="CPF">CPF do Cliente:</label>
 					<input class="input" type="text" id="CPF" name="CPF" required />
 				</div>
 				<div>
@@ -28,25 +28,15 @@
 					<label for="email">Email:</label>
 					<input class="input" type="email" id="email" name="email" required />
 				</div>
-				<div >
-					<label>Administrador?</label>
-				<label>
-					<input class="input" type="radio" name="is_admin" value="true" checked>
-					Sim
-				</label>
-				<label>
-					<input class="input" type="radio" name="is_admin" value="false">
-					Não
-				</label>
-				</div>
 
-				<button type="submit" class="button"><span>Editar colaborador</span></button>
+
+				<button type="submit" class="button"><span>Editar cliente</span></button>
 			</form>
 
 			<div class="details">
 				<img src="assets/images/logo/logo.jpeg" alt="Imagem de Login" width="600" height="600"/>
 			</div>
 		</div>
-		<script src="assets/scripts/events/collaborators/editar-colaboradores.events.js" type="module"></script>
+		<script src="assets/scripts/events/clients/editar-clientes.js" type="module"></script>
 	</body>
 </html>
