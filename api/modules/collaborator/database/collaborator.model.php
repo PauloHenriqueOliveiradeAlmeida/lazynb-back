@@ -1,6 +1,6 @@
 <?php
 
-require_once "database/connection.php";
+require_once __DIR__ . "/../../../shared/database/connection.php";
 
 class Collaborator
 {
@@ -25,7 +25,6 @@ class Collaborator
 	public function create()
 	{
 		$connection = new Connection();
-		echo "INSERT INTO collaborators (name, CPF, phone_number, email, is_admin, password) VALUES ({$this->name}, {$this->CPF}, {$this->phone_number}, {$this->email}, {$this->is_admin}, {$this->password})";
 		$query = $connection->queryDB(
 			"INSERT INTO collaborators (name, CPF, phone_number, email, is_admin, password) VALUES (?, ?, ?, ?, ?, ?)",
 			[
@@ -51,6 +50,15 @@ class Collaborator
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF, is_admin FROM collaborators WHERE id = ?", [$id]);
+		return $query->fetch_assoc() ?? [];
+	}
+
+	public function selectByEmail(string $email) {
+		$connection = new Connection();
+		$query = $connection->queryDB("SELECT id, name, email, password, is_admin from collaborators WHERE email=?", [
+			$email
+		]);
+
 		return $query->fetch_assoc() ?? [];
 	}
 

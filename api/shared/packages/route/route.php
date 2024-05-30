@@ -19,12 +19,20 @@ class Route
 		return new static($endpoint, $controller);
 	}
 
+	public function withAuth($auth, ?string $method = 'check') {
+		$is_authenticated = $auth::{$method}();
+
+		if ($is_authenticated) {
+			return $this;
+		}
+	}
+
 	public function methods(callable $callback) {
 		$callback($this);
 	}
 
 	public function post($callback, ?array $params = [], ?string $endpoint = '') {
-		$formmated_endpoint = "{$this->endpoint}/{$endpoint}";
+		$formmated_endpoint = "{$this->endpoint}/{$endpoint}/";
 		if ($this->request_method === "POST") {
 			if ($this->sanitizeUrl($this->request_uri) === $formmated_endpoint) {
 				return $this->controller::{$callback}($params);
@@ -35,7 +43,7 @@ class Route
 
 	public function put($callback, ?array $params = [], ?string $endpoint = '') {
 		$param = null;
-		$formmated_endpoint = "{$this->endpoint}/{$endpoint}";
+		$formmated_endpoint = "{$this->endpoint}/{$endpoint}/";
 
 		if (substr($endpoint, 0, 1) === ":") {
 			$param_name = substr($endpoint, 1);
@@ -57,7 +65,7 @@ class Route
 
 	public function patch($callback, ?array $params = [], ?string $endpoint = '') {
 		$param = null;
-		$formmated_endpoint = "{$this->endpoint}/{$endpoint}";
+		$formmated_endpoint = "{$this->endpoint}/{$endpoint}/";
 
 		if (substr($endpoint, 0, 1) === ":") {
 			$param_name = substr($endpoint, 1);
@@ -80,7 +88,7 @@ class Route
 	public function get($callback, ?string $endpoint = '')
 	{
 		$param = null;
-		$formmated_endpoint = "{$this->endpoint}/{$endpoint}";
+		$formmated_endpoint = "{$this->endpoint}/{$endpoint}/";
 
 		if (substr($endpoint, 0, 1) === ":") {
 			$param_name = substr($endpoint, 1);
@@ -103,7 +111,7 @@ class Route
 	public function delete($callback, ?string $endpoint = '')
 	{
 		$param = null;
-		$formmated_endpoint = "{$this->endpoint}/{$endpoint}";
+		$formmated_endpoint = "{$this->endpoint}/{$endpoint}/";
 
 		if (substr($endpoint, 0, 1) === ":") {
 			$param_name = substr($endpoint, 1);
@@ -122,6 +130,6 @@ class Route
 	}
 
 	private function sanitizeUrl($url) {
-		return substr($url, strrpos($url, '/')) . "/";
+		return substr($url, (strpos($url, 'api/') +  3)) . "/";
 	}
 }
