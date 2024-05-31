@@ -21,6 +21,7 @@ class Connection
 		$this->connectionDB->close();
 	}
 
+
 	public function queryDB(string $sql, array $params = [])
 	{
 		$result = false;
@@ -31,5 +32,9 @@ class Connection
 		$result = $stmt->get_result();
 		$this->closeDB();
 		return $result;
+	}
+
+	public function getLastInsertId() {
+		return $this->connectionDB->insert_id;
 	}
 }

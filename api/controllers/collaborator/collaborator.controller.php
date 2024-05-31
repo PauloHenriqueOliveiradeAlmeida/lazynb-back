@@ -17,7 +17,7 @@ class CollaboratorController
 			$collaborator->create();
 
 			HttpResponse::send(HttpResponse::CREATED);
-		} catch (PDOException $e) {
+		} catch (mysqli_sql_exception $e) {
 			switch ($e->getCode()) {
 				case 1062:
 					HttpResponse::send(HttpResponse::CONFLICT);
@@ -31,7 +31,7 @@ class CollaboratorController
 			$collaborator = new Collaborator();
 
 			echo json_encode($collaborator->selectAll());
-		} catch (PDOException $e) {
+		} catch (mysqli_sql_exception $e) {
 			HttpResponse::sendBody(["error" => $e], HttpResponse::SERVER_ERROR);
 		}
 	}
@@ -40,7 +40,7 @@ class CollaboratorController
 		try {
 			$collaborator = new Collaborator();
 			HttpResponse::sendBody($collaborator->selectById($id));
-		} catch (PDOException $e) {
+		} catch (mysqli_sql_exception $e) {
 			HttpResponse::sendBody(["error" => $e], HttpResponse::SERVER_ERROR);
 		}
 	}
@@ -56,7 +56,7 @@ class CollaboratorController
 			$collaborator->update($id);
 
 			HttpResponse::send();
-		} catch (PDOException $e) {
+		} catch (mysqli_sql_exception $e) {
 			switch ($e->getCode()) {
 				case 1062:
 					HttpResponse::send(HttpResponse::CONFLICT);
@@ -75,7 +75,7 @@ class CollaboratorController
 			$collaborator->patch($id);
 
 			HttpResponse::send();
-		} catch (PDOException $e) {
+		} catch (mysqli_sql_exception $e) {
 			switch ($e->getCode()) {
 				case 1062:
 					HttpResponse::send(HttpResponse::CONFLICT);
@@ -92,7 +92,7 @@ class CollaboratorController
 			$collaborator->delete($id);
 
 			HttpResponse::send();
-		} catch (PDOException $e) {
+		} catch (mysqli_sql_exception $e) {
 			switch ($e->getCode()) {
 				case 1329:
 					HttpResponse::send(HttpResponse::NOT_FOUND);
