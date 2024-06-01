@@ -39,8 +39,9 @@ class Property
 				$this->complement,
 				$this->city,
 				$this->UF,
-				$this->description
-			]
+				$this->description,
+				]
+
 		);
 
 		if ($query) {

@@ -1,4 +1,6 @@
-export function addTableData(table, datas, edit = true, remove = true) {
+import { request } from "../services/request.service.js";
+
+export function addTableData(table, datas, edit = false, remove = false) {
 	const table_body = document.getElementById(table).getElementsByTagName('tbody')[0];
 
 	const table_row = document.createElement('tr');
@@ -19,15 +21,18 @@ export function addTableData(table, datas, edit = true, remove = true) {
 
 		if (edit) {
 			const edit_link = document.createElement('a');
+			edit_link.href = `${edit}?id=${datas['id']}`;
 			edit_link.classList.add('fa-solid', 'fa-edit');
-			edit_link.id = 'edit';
 			table_data.appendChild(edit_link);
 		}
 
 		if (remove) {
 			const remove_link = document.createElement('a');
+			remove_link.addEventListener('click', async () => {
+				const isDeleted = await request(`${remove}?id=${datas['id']}`, 'delete');
+				isDeleted.status === 200 && table_row.remove();
+			});
 			remove_link.classList.add('fa-solid', 'fa-trash');
-			remove_link.id = 'remove';
 			table_data.appendChild(remove_link);
 		}
 	}

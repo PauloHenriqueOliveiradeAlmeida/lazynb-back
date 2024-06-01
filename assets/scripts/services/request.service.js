@@ -1,7 +1,18 @@
-export async function request(endpoint, method, data = {}) {
-	const request = await fetch(endpoint, { method, [data && body]: JSON.stringify(data) });
+export async function request(endpoint, method, data = null) {
+	const body = data ? {body: JSON.stringify(data)} : {};
+	const request = await fetch(endpoint, { method, ...body});
 
-	const response = await request.json();
+	try {
+		const response = await request.json();
+		return {
+			status: request.status,
+			data: response,
+		};
 
-	return response;
+	}
+	catch {
+		return {
+			status: request.status,
+		};
+	}
 }
