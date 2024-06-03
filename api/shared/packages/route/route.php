@@ -20,11 +20,11 @@ class Route
 	}
 
 	public function withAuth($auth, ?string $method = 'check') {
-		#$is_authenticated = $auth::{$method}();
+		$is_authenticated = $auth::{$method}();
 
-		#if ($is_authenticated) {
+		if ($is_authenticated) {
 		return $this;
-		#}
+		}
 	}
 
 	public function methods(callable $callback) {
@@ -88,7 +88,7 @@ class Route
 	public function get($callback, ?string $endpoint = '')
 	{
 		$param = null;
-		$formmated_endpoint = "{$this->endpoint}/{$endpoint}/";
+		$formmated_endpoint = $endpoint ? "{$this->endpoint}/{$endpoint}/" : "{$this->endpoint}/{$endpoint}";
 
 		if (substr($endpoint, 0, 1) === ":") {
 			$param_name = substr($endpoint, 1);

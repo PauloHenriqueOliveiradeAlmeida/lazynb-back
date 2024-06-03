@@ -6,6 +6,7 @@ try {
   require_once __DIR__ . "/modules/client/client.route.php";
   require_once __DIR__ . "/modules/collaborator/collaborator.route.php";
   require_once __DIR__ . "/modules/property/property.route.php";
+  require_once __DIR__ . "/modules/amenity/amenity.route.php";
 
 }
 catch(Exception $error) {

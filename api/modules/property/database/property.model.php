@@ -61,9 +61,10 @@ class Property
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB(
-			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.adress_number, p.complement, p.city, p.UF, p.description, cp.clientId
+			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.adress_number, p.complement, p.city, p.UF, p.description, cp.clientId, c.cpf, c.name AS client_name
 			FROM properties p
-			JOIN client_properties cp ON p.id = cp.propertyId"
+			JOIN client_properties cp ON p.id = cp.propertyId
+			JOIN clients c ON cp.clientId = c.id"
 		);
 		$result = $query->fetch_all(MYSQLI_ASSOC);
 		if (!$result){
@@ -72,30 +73,35 @@ class Property
 		return $result;
 	}
 
+
 	public static function selectById($id)
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB(
-			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.adress_number, p.complement, p.city, p.UF, p.description, cp.clientId
+			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.adress_number, p.complement, p.city, p.UF, p.description, cp.clientId, c.cpf, c.name AS client_name
 			FROM properties p
 			JOIN client_properties cp ON p.id = cp.propertyId
+			JOIN clients c ON cp.clientId = c.id
 			WHERE p.id = ?",
 			[$id]
 		);
 		return $query->fetch_assoc() ?? [];
 	}
+
 	public function selectByClientId($clientId)
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB(
-			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.adress_number, p.complement, p.city, p.UF, p.description
+			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.adress_number, p.complement, p.city, p.UF, p.description, c.cpf, c.name AS client_name
 			FROM properties p
 			JOIN client_properties cp ON p.id = cp.propertyId
+			JOIN clients c ON cp.clientId = c.id
 			WHERE cp.clientId = ?",
 			[$clientId]
 		);
 		return $query->fetch_all(MYSQLI_ASSOC);
 	}
+
 	public function delete($id)
 	{
 		$connection = new Connection();
