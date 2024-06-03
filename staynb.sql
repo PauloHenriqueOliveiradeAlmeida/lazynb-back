@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Tempo de geração: 29/05/2024 às 02:36
--- Versão do servidor: 10.4.28-MariaDB
--- Versão do PHP: 8.2.4
+-- Host: 127.0.0.1
+-- Tempo de geração: 29-Maio-2024 às 02:23
+-- Versão do servidor: 10.4.32-MariaDB
+-- versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,37 +20,39 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `staynb`
 --
-CREATE DATABASE IF NOT EXISTS `staynb` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `staynb`;
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `clients`
+-- Estrutura da tabela `clients`
 --
 
 CREATE TABLE `clients` (
-  `id` int(11) NOT NULL,
+  `id` bigint(11) NOT NULL,
   `name` varchar(150) NOT NULL,
   `CPF` varchar(14) NOT NULL,
   `phone_number` varchar(15) NOT NULL,
-  `email` varchar(250) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Despejando dados para a tabela `clients`
---
-
-INSERT INTO `clients` (`id`, `name`, `CPF`, `phone_number`, `email`) VALUES
-(3, 'paulo', '57867478833', '15997840494', 'paulo3@gmail.com'),
-(16, 'paulo', '51267478839', '15997840494', 'paulo3@gcail.com'),
-(17, 'paulo', '11267478839', '15997840494', 'paulo3@gaail.com'),
-(18, 'paulo', '11267478831', '15997840494', 'paulo3@gzail.com');
+  `email` varchar(250) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `collaborators`
+-- Estrutura da tabela `client_properties`
+--
+
+CREATE TABLE `client_properties` (
+  `id` bigint(11) UNSIGNED NOT NULL,
+  `clientId` bigint(11) NOT NULL,
+  `propertyId` bigint(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `collaborators`
 --
 
 CREATE TABLE `collaborators` (
@@ -66,39 +68,78 @@ CREATE TABLE `collaborators` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Despejando dados para a tabela `collaborators`
+-- Extraindo dados da tabela `collaborators`
 --
 
 INSERT INTO `collaborators` (`id`, `name`, `CPF`, `phone_number`, `email`, `is_admin`, `password`, `created_at`, `updated_at`) VALUES
-(5, 'Pedro Santos', '999.888.777-66', '31987654321', 'pedro.santos@example.compp', 0, 'senha345', '2024-05-27 02:30:43', '2024-05-27 02:30:43'),
-(6, 'Lucia Carvalho', '444.333.222-11', '31912345678', 'lucia.carvalho@example.com', 1, 'senha678', '2024-05-27 02:30:43', '2024-05-27 02:30:43'),
-(7, 'Fernando Lima', '777.888.999-00', '41987654321', 'fernando.lima@example.com', 0, 'senha901', '2024-05-27 02:30:43', '2024-05-27 02:30:43'),
-(8, 'Beatriz Costa', '222.111.000-33', '41912345678', 'beatriz.costa@example.com', 0, 'senha234', '2024-05-27 02:30:43', '2024-05-27 02:30:43'),
-(9, 'Ricardo Mendes', '666.555.444-22', '51987654321', 'ricardo.mendes@example.com', 1, 'senha567', '2024-05-27 02:30:43', '2024-05-27 02:30:43'),
-(10, 'Claudia Azevedo', '333.222.111-00', '51912345678', 'claudia.azevedo@example.com', 0, 'senha890', '2024-05-27 02:30:43', '2024-05-27 02:30:43'),
-(141, 'jsdjsjs', '987.654.321-99', '15997840494', 'paulo@jjddjjd.com', 1, '$2y$15$ChLM4ypAWD3eQWx5Q33K8Ov2ezmAcQIEKldJBzNt3TV/Kf4z4aiyK', NULL, NULL),
-(162, 'jsdjsjs', '987.654.321-91', '15997840494', 'paulo@jjdjjd.com', 1, '$2y$15$6C0c9HOPnj.kmQI4ncQwj.PzIMuVhl7XfnIlMO2osSmGSa9RtQdym', NULL, NULL),
-(163, 'jsdjsjs', '987.654.321-92', '15997840494', 'paulo@jdjjd.com', 1, '$2y$15$4mkf.GyCMI1c0625msv83uKGlhHHecQoN/5T2GqNetM7bwfoy0w.6', NULL, NULL),
-(164, 'jsdjsjs', '987.624.321-92', '15997840494', 'paulo@jadjjd.com', 1, '$2y$15$cjlVUy7pqpKaWXPwuQq/8uLy2N0SgvCU9CZNnmNNVPJtKEEoBMqbi', NULL, NULL),
-(165, 'jsdjsjs', '987.624.321-95', '15997840494', 'paulo@jadjjda.com', 1, '$2y$15$qiLS/5p9cmVbcXX7kMSmL.thV6Jq3NHcdTPwYy031LkPCA4NvGzm6', NULL, NULL),
-(166, 'huhuhuh', '109.283.746-22', '998738493', 'tetetetetetet@gmail.com', 1, '$2y$15$frF8FO9mbWrfY1H0JvfdxufbQA3cJs/87F8jrgFwwOQgVjjzogND.', NULL, NULL),
-(167, 'huhuhuh', '109.283.746-21', '998738493', 'tetetetetet@gmail.com', 1, '$2y$15$fIgdI4JclrMS.WlrjWJ4I.alpcEHUMYRVwrx/nXezpPDlRP0VH8gW', NULL, NULL),
-(169, 'huhuhuh', '109.283.746-26', '998738493', 'teetetet@gmail.com', 0, '$2y$15$2F78RQB5jsHThUoS1nD1Hu.aPfuG3GnWZe6NoIMtqcOXlFTFMyLpO', NULL, NULL);
+(86, 'Muraro', '353535353', '2323232', 'muraro@bolas.com', 0, '$2y$15$qauabi5qnMKtpqBkUavigunO3zcz2363WbvmP0iMoOlAstfJDt1se', NULL, NULL),
+(89, 'Muraro', '353523232335', '2323232', 'mur23232o@bolas.com', 0, '$2y$15$21jqCkhdRK8/5JQu7f7fieZfsyyHSbj/9.goo/rWxeLAxZoVkcb0K', NULL, NULL),
+(109, 'Muraro', '35352323', '2323232', 'mur232o@bolas.com', 1, '$2y$15$7.FzK5eN/BmrZyUiyp1PnuaW7O5X0axSQygVjtJqJAmaPElHZgsSy', NULL, NULL),
+(116, 'Muraro', '3535224242323', '2323232', '23@bolas.com', 1, '$2y$15$SZKHIfPH7tKMH31ewsJooe05hAu1ViOtKueyMcCPYc4s6IktaTUQC', NULL, NULL),
+(118, 'Muraro', '35352243333242', '2323232', '23333333@bolas.com', 1, '$2y$15$t04hyDfT8kY7qpHLkI2MbuFgfHW/hbnGwrnUebWHGmH8/5b/g4.w.', NULL, NULL),
+(121, 'Muraro', '351301', '2323232', 'MuraroTeste@bolas.com', 1, '$2y$15$CznUOMQz0759.xeLNLHv9eYvtri1y67vT01lUVeD2fPYNlegtIvWC', NULL, NULL),
+(122, 'PAULO', '23425424242', '32323232', 'paulinho@gmail.com', 1, '$2y$15$froijj2IsrW/DmPnFDCmkerpacoSCoGmxAiaURKmlWaF1KXQ0sl1G', NULL, NULL),
+(124, 'PAULO', '235434273', '523435', 'paulin2ho3334444333@gmail.com', 1, '$2y$15$4QPUO2QhRK9ZxDxVJs3JDOBSGpPjRGpJGMx8N9DI9.asaHAvmk2wu', NULL, NULL),
+(126, 'PAULO', '235', '523435', 'paulin2ho@gmail.com', 1, '$2y$15$FtMd7N1vEG.1DLdCC5PFre3zxj1dZFr/Scea0ZSMBCITs8g.CxVnq', NULL, NULL),
+(129, 'PAULO', '2357', '523435', 'pauli4n2ho@gmail.com', 1, '$2y$15$FZjxEWbZC3KHreSXvO.lJ.45QgWX8LGxGYtQ/BAOcSd55Vpl.EKju', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Extraindo dados da tabela `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '2024_03_31_012748_create_clients_table', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `properties`
+--
+
+CREATE TABLE `properties` (
+  `id` bigint(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `CEP` varchar(10) NOT NULL,
+  `neighborhood` int(11) NOT NULL,
+  `number` int(5) NOT NULL,
+  `complement` varchar(80) NOT NULL,
+  `city` varchar(80) NOT NULL,
+  `UF` varchar(2) NOT NULL,
+  `description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Índices para tabelas despejadas
 --
 
 --
--- Índices de tabela `clients`
+-- Índices para tabela `clients`
 --
 ALTER TABLE `clients`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `CPF` (`CPF`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD PRIMARY KEY (`id`);
 
 --
--- Índices de tabela `collaborators`
+-- Índices para tabela `client_properties`
+--
+ALTER TABLE `client_properties`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `clientId_fk` (`clientId`),
+  ADD KEY `propertyId_fk` (`propertyId`);
+
+--
+-- Índices para tabela `collaborators`
 --
 ALTER TABLE `collaborators`
   ADD PRIMARY KEY (`id`),
@@ -106,8 +147,32 @@ ALTER TABLE `collaborators`
   ADD UNIQUE KEY `collaborators_email_unique` (`email`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- Índices para tabela `migrations`
 --
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `properties`
+--
+ALTER TABLE `properties`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT de tabelas despejadas
+--
+
+--
+-- AUTO_INCREMENT de tabela `clients`
+--
+ALTER TABLE `clients`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `client_properties`
+--
+ALTER TABLE `client_properties`
+  MODIFY `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `clients`
@@ -119,7 +184,30 @@ ALTER TABLE `clients`
 -- AUTO_INCREMENT de tabela `collaborators`
 --
 ALTER TABLE `collaborators`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
+
+--
+-- AUTO_INCREMENT de tabela `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de tabela `properties`
+--
+ALTER TABLE `properties`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restrições para despejos de tabelas
+--
+
+--
+-- Limitadores para a tabela `client_properties`
+--
+ALTER TABLE `client_properties`
+  ADD CONSTRAINT `clientId_fk` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`),
+  ADD CONSTRAINT `propertyId_fk` FOREIGN KEY (`propertyId`) REFERENCES `properties` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

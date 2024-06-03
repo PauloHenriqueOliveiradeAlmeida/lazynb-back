@@ -5,8 +5,7 @@ require_once 'serverconfig.php';
 class Connection
 {
 	protected mysqli $connectionDB;
-	private $id_inserted;
-	private function connectDB()
+	public function connectDB()
 	{
 		$this->connectionDB = new mysqli(server, user, password, db, port);
 		if ($this->connectionDB->connect_errno) {
@@ -17,7 +16,7 @@ class Connection
 		};
 	}
 
-	private function closeDB()
+	public function closeDB()
 	{
 		$this->connectionDB->close();
 	}
@@ -25,18 +24,17 @@ class Connection
 
 	public function queryDB(string $sql, array $params = [])
 	{
-		$this->connectDB();
 		$result = false;
 		$connection = $this->connectDB();
+
 		$stmt = $connection->prepare($sql);
 		$stmt->execute($params);
 		$result = $stmt->get_result();
-		$this->id_inserted = $connection->insert_id;
 		$this->closeDB();
 		return $result;
 	}
 
 	public function getLastInsertId() {
-		return $this->id_inserted;
+		return $this->connectionDB->insert_id;
 	}
 }
