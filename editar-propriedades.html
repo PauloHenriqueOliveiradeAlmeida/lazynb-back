@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="assets/styles/style.css" />
+		<title>Editar Propiedades</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bellefair&display=swap">
+
+	</head>
+	<body id="body">
+		<div class="background">
+			<form id="form">
+				<h2>Editar Propriedades</h2>
+				<div>
+					<label for="nome">Nome:</label>
+					<input class="input" type="text" id="name" name="name" required />
+				</div>
+
+				<div>
+					<label for="cep">CEP</label>
+					<input class="input" type="text" id="cep" name="CEP" required />
+				</div>
+
+				<div>
+					<label for="bairro">Bairro:</label>
+					<input class="input" type="text" id="neigborhood" name="neigborhood" required />
+				</div>
+
+				<div>
+					<label for="numero">Número:</label>
+					<input class="input" type="text" id="number" name="number" required />
+				</div>
+
+				<div>
+					<label for="complemento">Complemento:</label>
+					<input class="input" type="text" id="complement" name="complement" required />
+				</div>
+
+				<div>
+					<label for="cidade">Cidade:</label>
+					<input class="input" type="text" id="city" name="city" readonly required />
+				</div>
+
+				<div>
+					<label for="uf">UF:</label>
+					<input class="input" type="text" id="uf" name="uf" readonly required />
+				</div>
+
+				<div>
+					<label for="comodidades">Comodidades:</label>
+					<input class="input" type="text" id="comodities" name="comodities" required />
+				</div>
+
+				<div>
+					<label for="descricao">Descrição:</label>
+					<input class="input" type="text" id="description" name="description" required />
+				</div>
+
+				<div>
+					<label for="cliente">Cliente:</label>
+					<select class="input" id="client" name="client" required >
+
+						</select>
+				</div>
+
+				<button type="submit" class="button"><span>Fazer Cadastro</span></button>
+			</form>
+
+			<div class="details">
+				<img src="assets/images/logo/logo.jpeg" alt="Imagem de Login" width="600" height="600" />
+			</div>
+		</div>
+
+		</div>
+		<script src="assets/scripts/events/propriedades/editar-propriedades.js" type="module"></script>
+	</body>
+</html>
