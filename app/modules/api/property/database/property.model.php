@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "/../../../shared/database/connection.php";
+require_once __DIR__ . "/../../../../shared/database/connection.php";
 
 class Property
 {
@@ -12,9 +12,11 @@ class Property
 	private readonly string $city;
 	private readonly string $UF;
 	private readonly string $description;
-	private readonly int $id;
+	private readonly int $client_id;
 
-	public function __construct(?string $name = '', ?string $CEP = '', ?string $neighborhood = '', ?string $adress_number = '',  ?string $complement = '', ?string $city = '', ?string $UF = '', ?string $description = '', ?int $id = 0)
+	public readonly int $id;
+
+	public function __construct(?string $name = '', ?string $CEP = '', ?string $neighborhood = '', ?string $adress_number = '',  ?string $complement = '', ?string $city = '', ?string $UF = '', ?string $description = '', ?int $client_id = 0)
 	{
 		$this->name = $name;
 		$this->CEP = $CEP;
@@ -24,7 +26,7 @@ class Property
 		$this->city = $city;
 		$this->UF = $UF;
 		$this->description = $description;
-		$this->id = $id;
+		$this->client_id = $client_id;
 	}
 
 	public function create()
@@ -42,16 +44,16 @@ class Property
 				$this->city,
 				$this->UF,
 				$this->description
-				]
-			);
+			]
+		);
 
-			$propertyId = $connection->getLastInsertId();
+		$this->id = $connection->getLastInsertId();
 
 		$connection->queryDB(
 			"INSERT INTO client_properties (clientId, propertyId) VALUES (?, ?)",
 			[
-				$this->id,
-				$propertyId
+				$this->client_id,
+				$this->id
 			]
 		);
 		return $query;
@@ -67,7 +69,7 @@ class Property
 			JOIN clients c ON cp.clientId = c.id"
 		);
 		$result = $query->fetch_all(MYSQLI_ASSOC);
-		if (!$result){
+		if (!$result) {
 			throw new Exception('Fetch failed');
 		}
 		return $result;

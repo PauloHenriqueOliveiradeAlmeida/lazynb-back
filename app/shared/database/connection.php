@@ -5,7 +5,7 @@ require_once 'serverconfig.php';
 class Connection
 {
 	protected mysqli $connectionDB;
-	private $id_inserted;
+	public $id_inserted;
 	private function connectDB()
 	{
 		$this->connectionDB = new mysqli(server, user, password, db, port);

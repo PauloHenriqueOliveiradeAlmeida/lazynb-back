@@ -1,9 +1,8 @@
 <?php
 
-require_once __DIR__ . "/../../shared/packages/http-response/http-response.php";
-require_once __DIR__ . "/../../shared/auth/auth.service.php";
-require_once __DIR__ . "/../../modules/amenity/amenity.controller.php";
-require_once __DIR__ . "/../../modules/amenity/database/amenity.model.php";
+require_once __DIR__ . "/../../../shared/packages/http-response/http-response.php";
+require_once __DIR__ . "/../../../shared/auth/auth.service.php";
+require_once __DIR__ . "/../amenity/amenity.controller.php";
 require_once "database/property.model.php";
 require_once "dtos/property.dto.php";
 
@@ -12,9 +11,17 @@ class PropertyController
     public static function create(array $data)
     {
         try {
+			$amenities = $data['amenities'];
+			unset($data['amenities']);
             $dto = PropertyDTO::validate(...$data);
             $property = new Property(...$dto);
-            $property->create($data['id']);
+            $property->create();
+
+			AmenityController::connectAmenity([
+				'property_id' => $property->id,
+				'amenities' => $amenities
+
+			]);
 
             HttpResponse::send(HttpResponse::CREATED);
         } catch (mysqli_sql_exception $e) {
@@ -94,9 +101,5 @@ class PropertyController
         }
     }
 
-    #public static function addAmenities($data)
-    #{
-    #    AmenityController::processAmenities($data);
-    #}
 }
 ?>
