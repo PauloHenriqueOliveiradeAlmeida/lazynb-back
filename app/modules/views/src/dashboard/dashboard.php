@@ -1,3 +1,13 @@
+<?php
+
+require_once __DIR__ . "/../../../../shared/auth/auth.service.php";
+
+if (!Auth::check()) {
+	header("location: ../index.php");
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <?php include_once("../../public/components/head/index.php") ?>
@@ -14,7 +24,7 @@
 			<a href="../client/visualizar-clientes.php" class="button">
 				<span>Clientes</span>
 			</a>
-			<a href="../properties/visualizar-propriedades.php" class="button">
+			<a href="../property/visualizar-propriedades.php" class="button">
 				<span>Propriedades</span>
 			</a>
 		</div>

@@ -3,8 +3,8 @@ export function addSelectOptions(select, datas) {
 
 	datas.forEach(data => {
 		const option = document.createElement("option");
-		option.value = data;
-		option.text = data;
+		option.value = data.value;
+		option.text = data.label;
 		select_box.appendChild(option);
 	});
 }

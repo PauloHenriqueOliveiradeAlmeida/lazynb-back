@@ -7,7 +7,7 @@ class Property
 	private readonly string $name;
 	private readonly string $CEP;
 	private readonly string $neighborhood;
-	private readonly string $adress_number;
+	private readonly string $address_number;
 	private readonly string $complement;
 	private readonly string $city;
 	private readonly string $UF;
@@ -16,12 +16,12 @@ class Property
 
 	public readonly int $id;
 
-	public function __construct(?string $name = '', ?string $CEP = '', ?string $neighborhood = '', ?string $adress_number = '',  ?string $complement = '', ?string $city = '', ?string $UF = '', ?string $description = '', ?int $client_id = 0)
+	public function __construct(?string $name = '', ?string $CEP = '', ?string $neighborhood = '', ?string $address_number = '',  ?string $complement = '', ?string $city = '', ?string $UF = '', ?string $description = '', ?int $client_id = 0)
 	{
 		$this->name = $name;
 		$this->CEP = $CEP;
 		$this->neighborhood = $neighborhood;
-		$this->adress_number = $adress_number;
+		$this->address_number = $address_number;
 		$this->complement = $complement;
 		$this->city = $city;
 		$this->UF = $UF;
@@ -34,12 +34,12 @@ class Property
 		$connection = new Connection();
 
 		$query = $connection->queryDB(
-			"INSERT INTO properties (name, CEP, neighborhood, adress_number, complement, city, UF, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO properties (name, CEP, neighborhood, address_number, complement, city, UF, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 			[
 				$this->name,
 				$this->CEP,
 				$this->neighborhood,
-				$this->adress_number,
+				$this->address_number,
 				$this->complement,
 				$this->city,
 				$this->UF,
@@ -63,16 +63,12 @@ class Property
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB(
-			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.adress_number, p.complement, p.city, p.UF, p.description, cp.clientId, c.cpf, c.name AS client_name
+			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.address_number, p.complement, p.city, p.UF, p.description, cp.clientId, c.cpf, c.name AS client_name
 			FROM properties p
 			JOIN client_properties cp ON p.id = cp.propertyId
 			JOIN clients c ON cp.clientId = c.id"
 		);
-		$result = $query->fetch_all(MYSQLI_ASSOC);
-		if (!$result) {
-			throw new Exception('Fetch failed');
-		}
-		return $result;
+		return $query->fetch_all(MYSQLI_ASSOC);
 	}
 
 
@@ -80,7 +76,7 @@ class Property
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB(
-			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.adress_number, p.complement, p.city, p.UF, p.description, cp.clientId, c.cpf, c.name AS client_name
+			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.address_number, p.complement, p.city, p.UF, p.description, cp.clientId, c.cpf, c.name AS client_name
 			FROM properties p
 			JOIN client_properties cp ON p.id = cp.propertyId
 			JOIN clients c ON cp.clientId = c.id
@@ -94,7 +90,7 @@ class Property
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB(
-			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.adress_number, p.complement, p.city, p.UF, p.description, c.cpf, c.name AS client_name
+			"SELECT p.id, p.name, p.CEP, p.neighborhood, p.address_number, p.complement, p.city, p.UF, p.description, c.cpf, c.name AS client_name
 			FROM properties p
 			JOIN client_properties cp ON p.id = cp.propertyId
 			JOIN clients c ON cp.clientId = c.id
@@ -116,12 +112,12 @@ class Property
 	{
 		$connection = new Connection();
 		$query = $connection->queryDB(
-			"UPDATE properties SET name=?, CEP=?, neighborhood=?, adress_number=?, complement=?, city=?, UF=?, description=? WHERE id = ?",
+			"UPDATE properties SET name=?, CEP=?, neighborhood=?, address_number=?, complement=?, city=?, UF=?, description=? WHERE id = ?",
 			[
 				$this->name,
 				$this->CEP,
 				$this->neighborhood,
-				$this->adress_number,
+				$this->address_number,
 				$this->complement,
 				$this->city,
 				$this->UF,

@@ -1,9 +1,10 @@
 <?php
 
 require_once __DIR__ . "/../../../../shared/auth/auth.service.php";
+include_once __DIR__ . "/../../public/components/add-button/add-button.php";
 
 if (!Auth::check()) {
-	header("location: ../login/login.html");
+	header("location: ../index.php");
 }
 
 ?>
@@ -48,6 +49,7 @@ if (!Auth::check()) {
 			</table>
 		</div>
 	</div>
+	<?php addButton("cadastrar-colaborador.php") ?>
 	<script type="module" src="events/visualizar-colaboradores.event.js"></script>
 </body>
 

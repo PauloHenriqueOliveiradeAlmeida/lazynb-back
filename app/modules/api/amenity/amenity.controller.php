@@ -18,6 +18,18 @@ class AmenityController
 		}
 	}
 
+	public static function getByPropertyId(int $property_id) {
+		try {
+			$amenities = new Amenity();
+			HttpResponse::sendBody($amenities->selectByPropertyId($property_id));
+		}
+		catch (mysqli_sql_exception $error) {
+			HttpResponse::sendBody([
+				"message" => $error->getMessage()
+			], HttpResponse::SERVER_ERROR);
+		}
+	}
+
 	public static function connectAmenity($data)
 	{
 		$property_id = $data['property_id'];
@@ -25,18 +37,7 @@ class AmenityController
 
 		try {
 			foreach ($amenities as $amenity) {
-				$amenity_name = $amenity['amenity'];
-
-				$amenity_record = Amenity::findByName($amenity_name);
-
-				if ($amenity_record) {
-					$amenity_id = $amenity_record['id'];
-				} else {
-					$amenity_model = new Amenity($amenity_name);
-					$amenity_model->create();
-					$amenity_id = $amenity_model->id;
-				}
-				Amenity::addAmenityToProperty($property_id, $amenity_id);
+				Amenity::addAmenityToProperty($property_id, $amenity);
 			}
 		} catch (mysqli_sql_exception $e) {
 			HttpResponse::sendBody(["error" => $e->getMessage()], HttpResponse::SERVER_ERROR);

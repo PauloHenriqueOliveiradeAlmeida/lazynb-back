@@ -3,7 +3,9 @@ export function fillForm(form, data) {
 
 	Object.keys(data).forEach(key => {
 		if (key !== 'id') {
-			form_element.elements[key].value = data[key];
+			if (form_element.elements[key]) {
+				form_element.elements[key].value = data[key];
+			}
 		}
 	});
 }

@@ -1,3 +1,13 @@
+<?php
+
+require_once __DIR__ . "/../../../../shared/auth/auth.service.php";
+
+if (!Auth::check()) {
+	header("location: ../index.php");
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <?php include_once("../../public/components/head/index.php") ?>
@@ -33,7 +43,7 @@
 		</form>
 
 		<div class="details">
-			<img src="../../public/images/logo/logo.jpeg" alt="Imagem de Login" width="600" height="600" />
+			<img src="../../public/images/logo/logo.jpeg" alt="Logotipo" width="600" height="600" />
 		</div>
 	</div>
 	<script src="events/editar-clientes.event.js" type="module"></script>

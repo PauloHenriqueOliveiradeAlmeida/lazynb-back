@@ -36,7 +36,6 @@ class Auth {
 		if ($verified_password) {
 			$_SESSION["PHP_AUTH_USER"] = $user_data;
 			$_SESSION["SESSION_AUTH"] = true;
-			echo $_SESSION["SESSION_AUTH"];
 			return true;
 		}
 		else {

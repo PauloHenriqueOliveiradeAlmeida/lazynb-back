@@ -4,7 +4,7 @@ export async function request(endpoint, method, data = null) {
 
 	const body = data ? { body: JSON.stringify(data) } : {};
 	try {
-		const request = await fetch(settings.base_url + endpoint, { method, ...body });
+		const request = await fetch((endpoint.includes('http') ? '' : settings.base_url) + endpoint, { method, ...body });
 
 		const response = await request.json();
 		return {

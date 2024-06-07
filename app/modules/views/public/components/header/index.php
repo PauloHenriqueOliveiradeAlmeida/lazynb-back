@@ -5,7 +5,7 @@
 	<nav id="navbar" style="left: -300px">
 		<ul>
 			<li>
-				<a href="../../src/home/home.php">
+				<a href="../../src/dashboard/dashboard.php">
 					<span>
 						<i class="fa-solid fa-house"></i>
 					</span>
@@ -22,7 +22,7 @@
 				<ul id="register-submenu" class="submenu hidden">
 					<li><a href="../../src/collaborator/cadastrar-colaborador.php">Colaboradores</a></li>
 					<li><a href="../../src/client/cadastrar-clientes.php">Clientes</a></li>
-					<li><a href="">Propriedades</a></li>
+					<li><a href="../../src/property/cadastrar-propriedades.php">Propriedades</a></li>
 				</ul>
 			</li>
 			<li>
@@ -35,7 +35,7 @@
 				<ul id="consult-submenu" class="submenu hidden">
 					<li><a href="../../src/collaborator/visualizar-colaboradores.php">Colaboradores</a></li>
 					<li><a href="../../src/client/visualizar-clientes.php">Clientes</a></li>
-					<li><a href="">Propriedades</a></li>
+					<li><a href="../../src/property/visualizar-propriedades.php">Propriedades</a></li>
 				</ul>
 			</li>
 			<li>
@@ -72,7 +72,7 @@
 			try {
 				const logout_successful = await request('/api/auth/logout');
 
-				if (logout_successful.status === 204) {
+				if (logout_successful.status === 200) {
 					window.location.href = location.pathname + "/../login/login.php";
 				}
 				else {

@@ -1,3 +1,14 @@
+<?php
+
+require_once __DIR__ . "/../../../../shared/auth/auth.service.php";
+include_once __DIR__ . "/../../public/components/add-button/add-button.php";
+
+if (!Auth::check()) {
+	header("location: ../index.php");
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -36,6 +47,7 @@
 				</tbody>
 			</table>
 		</div>
+		<?php addButton("cadastrar-clientes.php") ?>
 	</div>
 	<script type="module" src="events/visualizar-clientes.event.js"></script>
 </body>

@@ -13,7 +13,7 @@ document.getElementById('form').addEventListener('submit', async (e) => {
 	const created = create_collaborator.status;
 
 	if (created === 201) {
-		window.location.href = 'visualizar-colaboradores.html';
+		window.location.href = 'visualizar-colaboradores.php';
 	}
 	else {
 		handleException(create_collaborator);

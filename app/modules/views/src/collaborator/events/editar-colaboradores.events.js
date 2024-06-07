@@ -34,7 +34,7 @@ document.getElementById('form').addEventListener('submit', async (e) => {
 	const updated = update_collaborator.status;
 
 	if (updated === 200) {
-		window.location.href = 'visualizar-colaboradores.html';
+		window.location.href = 'visualizar-colaboradores.php';
 	}
 	else {
 		handleException(update_collaborator);

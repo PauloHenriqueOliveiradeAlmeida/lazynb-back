@@ -3,7 +3,7 @@
 require_once __DIR__ . "/../../../../shared/auth/auth.service.php";
 
 if (!Auth::check()) {
-	header("location: ../login/login.html");
+	header("location: ../index.php");
 }
 
 ?>
