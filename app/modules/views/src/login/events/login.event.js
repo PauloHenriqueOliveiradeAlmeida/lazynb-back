@@ -8,7 +8,7 @@ document.getElementById('form').addEventListener('submit', async (e) => {
 	const login = await request('/api/auth/login', 'POST', datas);
 
 	if (login.status === 200) {
-		window.location.href = '../collaborator/visualizar-colaboradores.php';
+		window.location.href = '../dashboard/dashboard.php';
 	}
 	else {
 		handleException(login);
