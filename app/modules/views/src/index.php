@@ -257,6 +257,13 @@
 		</div>
 	</div>
 
+	<div class="background-terms-user-popup" id="background-terms-of-user">
+		<div class="terms-user-popup">
+			<h4>Aceita nossos termos?</h4>
+			<p>Para usar nosso sistema, você deve ceder o acesso a alguns dados pessoais, clique para ler nossos <a href="../public/files/terms-of-user/terms-of-user.pdf" target="_blank" class="terms-of-user">Termos de Uso</a></p>
+			<button class="button" id="terms-allowed"><span>Eu aceito os termos de uso</span></button>
+		</div>
+	</div>
 
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -267,7 +274,7 @@
 	<script src="../public/scripts/libs/tempusdominus/js/moment-timezone.min.js"></script>
 	<script src="../public/scripts/libs/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-	<script src="home/events/home.event.js"></script>
+	<script src="home/events/home.event.js" type="module"></script>
 </body>
 
 </html>

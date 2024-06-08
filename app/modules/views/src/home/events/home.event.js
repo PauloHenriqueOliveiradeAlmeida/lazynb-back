@@ -1,3 +1,5 @@
+import { parseCookies } from "../../../public/scripts/utils/parse-cookies.util.js";
+
 (function ($) {
     "use strict";
     $(document).ready(function () {
@@ -83,3 +85,14 @@
 
 })(jQuery);
 
+document.addEventListener('DOMContentLoaded', () => {
+	const allowed_terms = parseCookies().allowed_terms;
+	if (allowed_terms) {
+		document.getElementById('background-terms-of-user').style.display = 'none';
+	}
+});
+
+document.getElementById('terms-allowed').addEventListener('click', () => {
+	document.cookie = 'allowed_terms=true';
+	document.getElementById('background-terms-of-user').style.display = 'none';
+});

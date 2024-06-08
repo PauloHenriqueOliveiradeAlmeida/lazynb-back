@@ -74,6 +74,79 @@
     color: var(--primary);
 }
 
+.background-terms-user-popup {
+	background-color: #00000079;
+	position: fixed;
+	display: grid;
+	place-items: center;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+.terms-user-popup {
+	width: 50%;
+	background-color: var(--light);
+	padding: 2rem;
+	border-radius: 1rem;
+}
+
+.button {
+	margin-top: calc(2.7rem - 1.3rem);
+	width: 100%;
+	background-color: var(--secondary);
+	border: 1.5px solid var(--secondary);
+	color: var(--light);
+	padding: 0.5rem;
+	font-size: 1rem;
+	font-weight: bold;
+	border-radius: calc(10px - 5px);
+	transition: border-color 0.4s ease-in-out;
+	position: relative;
+	overflow: hidden;
+}
+
+.button:hover {
+	color: var(--white);
+	border-color: var(--white);
+}
+
+.button:focus {
+	outline: none;
+}
+
+.button span {
+	position: relative;
+	z-index: 1;
+}
+
+.button::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 10px;
+	height: 10px;
+	border-radius: 100px;
+	transition: transform 0.4s ease-in;
+}
+
+.button:hover::after {
+	transform: scale(200);
+	background-color: var(--primary);
+	box-shadow: 0px 0px 0px 36px var(--dark);
+}
+.terms-of-user {
+	text-align: center;
+	color: var(--secondary);
+	text-decoration: underline;
+}
+
+.terms-of-user:hover {
+	color: var(--dark);
+}
+
 @media (min-width: 992px) {
     .navbar-light .navbar-nav .nav-link::before {
         position: absolute;
