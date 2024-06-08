@@ -2,6 +2,7 @@ import { getFormData, fillForm } from '../../../public/scripts/handlers/form.han
 import { handleException } from '../../../public/scripts/services/handle-exception.service.js';
 import { request } from '../../../public/scripts/services/request.service.js';
 import { clearMask, maskCpf } from '../../../public/scripts/utils/mask-cpf.util.js';
+import { maskPhone } from "../../../public/scripts/utils/mask-phone.util.js";
 
 const id = new URLSearchParams(window.location.search).get('id');
 document.addEventListener('DOMContentLoaded', async () => {
@@ -42,5 +43,7 @@ document.getElementById('form').addEventListener('submit', async (e) => {
 });
 
 document.getElementById('CPF').addEventListener('blur', (e) => e.target.value = maskCpf(e.target.value));
-document.getElementById('CPF').addEventListener('focus', (e) => e.target.value = clearMask(e.target.value))
+document.getElementById('CPF').addEventListener('focus', (e) => e.target.value = clearMask(e.target.value));
+document.getElementById('phone_number').addEventListener('blur', (e) => e.target.value = maskPhone(e.target.value));
+document.getElementById('phone_number').addEventListener('focus', (e) => e.target.value = clearMask(e.target.value));
 

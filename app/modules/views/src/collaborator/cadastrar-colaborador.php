@@ -26,7 +26,7 @@ if (!Auth::check()) {
 
 			<div>
 				<label for="cpf">CPF</label>
-				<input class="input" type="text" id="cpf" name="CPF" required />
+				<input class="input" type="text" id="cpf" name="CPF" maxlength="11" required />
 			</div>
 
 			<div>
@@ -36,7 +36,7 @@ if (!Auth::check()) {
 
 			<div>
 				<label for="contato">Contato:</label>
-				<input class="input" type="tel" id="contato" name="phone_number" required />
+				<input class="input" type="tel" id="phone_number" name="phone_number" maxlength="11" required />
 			</div>
 
 			<div>

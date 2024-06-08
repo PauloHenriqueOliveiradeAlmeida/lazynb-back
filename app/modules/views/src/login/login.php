@@ -13,7 +13,7 @@
 
 			<div>
 				<label for="password">Senha:</label>
-				<input class="input" type="text" id="password" name="password" required />
+				<input class="input" type="password" id="password" name="password" required />
 			</div>
 			<button type="submit" class="button"><span>Fazer Login</span></button>
 		</form>

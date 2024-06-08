@@ -27,11 +27,11 @@ if (!Auth::check()) {
 			</div>
 			<div>
 				<label for="CPF">CPF do Cliente:</label>
-				<input class="input" type="text" id="CPF" name="CPF" required />
+				<input class="input" type="text" id="CPF" name="CPF" maxlength="11" required />
 			</div>
 			<div>
 				<label for="telefone">Telefone:</label>
-				<input class="input" type="text" id="phone_number" name="phone_number" required />
+				<input class="input" type="text" id="phone_number" name="phone_number" maxlength="11" required />
 			</div>
 			<div>
 				<label for="email">Email:</label>

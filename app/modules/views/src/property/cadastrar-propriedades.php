@@ -70,7 +70,7 @@ if (!Auth::check()) {
 			<div class="form-row">
 				<div>
 					<label for="city">Cidade:</label>
-					<input class="input" type="text" id="city" name="city" readonly required />
+					<input class="input" type="text" id="city" name="city" required />
 				</div>
 				<div class="uf">
 					<label for="uf">UF:</label>
