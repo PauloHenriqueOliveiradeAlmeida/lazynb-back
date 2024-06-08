@@ -73,7 +73,7 @@
 				const logout_successful = await request('/api/auth/logout');
 
 				if (logout_successful.status === 200) {
-					window.location.href = location.pathname + "/../login/login.php";
+					window.location.href = location.pathname + "/../../login/login.php";
 				}
 				else {
 					throw logout_successful;
