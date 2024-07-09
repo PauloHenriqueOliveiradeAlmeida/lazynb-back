@@ -1,0 +1,17 @@
+{
+	"name": "paulo/app",
+	"type": "project",
+	"autoload": {
+		"psr-4": {
+			"App\\": "app/",
+			"Raven\\": "vendor/raven/src"
+		}
+	},
+	"authors": [
+		{
+			"name": "PauloHenriqueOliveiradeAlmeida",
+			"email": "paulo333henrique00@gmail.com"
+		}
+	],
+	"require": {}
+}
