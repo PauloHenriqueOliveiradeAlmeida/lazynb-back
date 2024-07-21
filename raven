@@ -16,9 +16,9 @@ if ($command === 'start') {
 } else if ($command === 'create') {
 	$type = $argv[2];
 
-	if (in_array($type, ['r', 'route'])) {
-		$routeName = readline('Type your route name: ');
+	if (in_array($type, ['c', 'controller'])) {
+		$controllerName = readline('Type your controller name: ');
 
-		$cli->createRouteFile($routeName);
+		$cli->createControllerFile($controllerName);
 	}
 }
