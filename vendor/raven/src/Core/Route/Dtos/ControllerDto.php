@@ -1,6 +1,6 @@
 <?php
 
-namespace Raven\Core\RouteHandler\Dtos;
+namespace Raven\Core\Route\Dtos;
 
 class ControllerDto
 {
@@ -15,8 +15,11 @@ class ControllerDto
 	/**
 	 * @param HttpMethodDto[] $methods
 	 */
-	public function __construct(string $endpoint, string $controller, array $methods)
-	{
+	public function __construct(
+		string $endpoint,
+		string $controller,
+		array $methods
+	) {
 		$this->endpoint = $endpoint;
 		$this->controller = $controller;
 		$this->methods = $methods;

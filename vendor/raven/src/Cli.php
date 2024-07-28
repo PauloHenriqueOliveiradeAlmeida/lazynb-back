@@ -54,14 +54,16 @@ class Cli
 				break;
 			}
 			if (preg_match("/\b\w+::class\b/", $appFile[$i])) {
+				$appFile[$i] = str_replace(["\r", "\n"], "", $appFile[$i]);
 				if (
 					$appFile[$i + 1] &&
 					!preg_match("/\b\w+::class\b/", $appFile[$i + 1])
 				) {
-					$appFile[$i] = str_replace(["\r", "\n"], "", $appFile[$i]);
+					$appFile[$i] = str_replace("]", "", $appFile[$i]);
 					$appFile[$i] .=
-						$appFile[$i][strlen($appFile[$i]) - 1] !== "," ? ",\n" : "\n";
-					array_splice($appFile, $i + 1, 0, [$controllerForInsert . "\n"]);
+						$appFile[$i][strlen($appFile[$i]) - 1] !== "," ? ", " : " ";
+					$appFile[$i] .= $controllerForInsert . "]";
+
 					break;
 				}
 			}
