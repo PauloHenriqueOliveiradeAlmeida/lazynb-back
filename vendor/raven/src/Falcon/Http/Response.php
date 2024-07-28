@@ -1,6 +1,6 @@
 <?php
 
-namespace Raven\Http;
+namespace Raven\Falcon\Http;
 
 class Response
 {

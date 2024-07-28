@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\{$name};
+namespace App\Api\Posts;
 
 use Raven\Falcon\Attributes\Controller;
 use Raven\Falcon\Attributes\HttpMethods\Post;
@@ -10,31 +10,30 @@ use Raven\Falcon\Attributes\HttpMethods\Get;
 use Raven\Falcon\Attributes\HttpMethods\Delete;
 use Raven\Falcon\Http\Response;
 
-#[Controller(endpoint: '/api/{$originalName}')]
-class {$name}Controller
+#[Controller(endpoint: "/api/posts")]
+class PostsController
 {
-
 	#[Post]
 	public function create()
 	{
 		return Response::sendBody([
-			"Created" => true
+			"Created" => true,
 		]);
 	}
 
-	#[Put(endpoint: ':id')]
+	#[Put(endpoint: ":id")]
 	public function update(int $id)
 	{
 		return Response::sendBody([
-			"Updated {$name} with id" => $id
+			"Updated Posts with id" => $id,
 		]);
 	}
 
-	#[Patch(endpoint: ':id')]
+	#[Patch(endpoint: ":id")]
 	public function partialUpdate(int $id)
 	{
 		return Response::sendBody([
-			"Updated partially {$name} with id" => $id
+			"Updated partially Posts with id" => $id,
 		]);
 	}
 
@@ -42,23 +41,23 @@ class {$name}Controller
 	public function getAll()
 	{
 		return Response::sendBody([
-			"Searched all {$name}" => true
+			"Searched all Posts" => true,
 		]);
 	}
 
-	#[Get(endpoint: ':id')]
+	#[Get(endpoint: ":id")]
 	public function getOne(int $id)
 	{
 		return Response::sendBody([
-			"Searched {$name} with id" => $id
+			"Searched Posts with id" => $id,
 		]);
 	}
 
-	#[Delete(endpoint: ':id')]
+	#[Delete(endpoint: ":id")]
 	public function delete(int $id)
 	{
 		return Response::sendBody([
-			"Deleted {$name} with id" => $id
+			"Deleted Posts with id" => $id,
 		]);
 	}
 }

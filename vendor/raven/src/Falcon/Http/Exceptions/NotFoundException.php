@@ -1,8 +1,8 @@
 <?php
 
-namespace Raven\Http\Exceptions;
+namespace Raven\Falcon\Http\Exceptions;
 
-use Raven\Http\StatusCode;
+use Raven\Falcon\Http\StatusCode;
 
 class NotFoundException extends \Exception
 {

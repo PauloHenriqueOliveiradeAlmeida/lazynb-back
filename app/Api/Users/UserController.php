@@ -2,22 +2,26 @@
 
 namespace App\Api\Users;
 
-use Raven\Http\Response;
-use Raven\Http\StatusCode;
+use Raven\Falcon\Attributes\Controller;
+use Raven\Falcon\Attributes\HttpMethods\Get;
+use Raven\Falcon\Http\Response;
 
+#[Controller(endpoint: "/api/users")]
 class UserController
 {
-	public static function getOne(int $account)
+	#[Get]
+	public function getAll()
 	{
 		return Response::sendBody([
-			"message" => $account
-		], StatusCode::OK);
+			"Hello" => "World",
+		]);
 	}
 
-	public static function getAll()
+	#[Get(endpoint: ":id")]
+	public function getOne(int $id)
 	{
 		return Response::sendBody([
-			"message" => "Hello World"
-		], StatusCode::OK);
+			"User id" => $id,
+		]);
 	}
 }

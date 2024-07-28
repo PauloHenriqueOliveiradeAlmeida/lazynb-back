@@ -1,24 +1,23 @@
 #!/usr/bin/env php
 <?php
-
-require 'vendor/autoload.php';
+require "vendor/autoload.php";
 
 use Raven\Cli;
 
 $cli = new Cli();
 
-
 $command = $argv[1];
 
-if ($command === 'start') {
-	$port = in_array($argv[2], ['--port', '-p']) ? $argv[3] : null;
+if ($command === "start") {
+	$port = in_array($argv[2], ["--port", "-p"]) ? $argv[3] : null;
 	$cli->start($port);
-} else if ($command === 'create') {
+} elseif ($command === "create") {
 	$type = $argv[2];
 
-	if (in_array($type, ['r', 'route'])) {
-		$routeName = readline('Type your route name: ');
+	if (in_array($type, ["c", "controller"])) {
+		$controllerName = readline("Type your controller name: ");
 
-		$cli->createRouteFile($routeName);
+		$cli->createControllerFile($controllerName);
 	}
 }
+

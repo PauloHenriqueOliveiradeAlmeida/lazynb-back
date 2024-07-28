@@ -2,15 +2,20 @@
 
 namespace App;
 
-use Raven\App\App;
-use Raven\App\AppConfig;
+require "vendor/autoload.php";
 
-require 'vendor/autoload.php';
+use App\Api\Posts\PostsController;
+use App\Api\Clients\ClientsController;
+use App\Api\Users\UserController;
+use Raven\Core\App;
+use Raven\Core\AppConfig;
 
-$appConfig = new AppConfig(routes: [
-	__DIR__ . "/../Api/Users/UserRoute.php",
-	__DIR__ . "/../Api/Clients/ClientsRoute.php"
-]);
-
+$appConfig = new AppConfig(
+	controllers: [
+		UserController::class,
+		ClientsController::class,
+		PostsController::class,
+	]
+);
 
 App::bootstrap($appConfig);
