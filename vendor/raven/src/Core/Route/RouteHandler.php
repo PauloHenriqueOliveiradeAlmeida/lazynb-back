@@ -14,16 +14,49 @@ use ReflectionClass;
 
 final class RouteHandler
 {
-	private readonly AppConfig $appConfig;
-
 	/**
 	 * @var ControllerDto[]
 	 */
 	private array $controllers = [];
 
-	public function __construct(AppConfig $appConfig)
+	public function __construct(private readonly AppConfig $appConfig)
 	{
-		$this->appConfig = $appConfig;
+	}
+
+	public function serveStaticFiles(string $folder, string $endpoint)
+	{
+		$requestedUrl = $this->sanitizeUrl($_SERVER["REQUEST_URI"]);
+		$requestedMethod = $_SERVER["REQUEST_METHOD"];
+
+		if (
+			$requestedMethod !== "GET" ||
+			!in_array("GET", $this->appConfig->methodsAllowed)
+		) {
+			return;
+		}
+
+		$staticFiles = scandir($folder);
+
+		if (!$staticFiles) {
+			throw new \Error("Invalid Folder");
+		}
+
+		foreach ($staticFiles as $entry) {
+			if (is_dir($entry)) {
+				continue;
+			}
+			$endpointBuilder = EndpointBuilder::set($entry, $requestedUrl)
+				->withBase($endpoint)
+				->get();
+
+			if ($endpointBuilder->endpoint !== $requestedUrl) {
+				continue;
+			}
+
+			header("Content-Type: " . mime_content_type("$folder/$entry"));
+			readfile("$folder/$entry");
+			exit();
+		}
 	}
 
 	public function manageRoute()
@@ -39,8 +72,10 @@ final class RouteHandler
 			foreach ($controllerData->methods as $method) {
 				$endpoint = EndpointBuilder::set($method->endpoint, $requestedUrl)
 					->withBase($controllerData->endpoint)
+					->withBase($this->appConfig->basePath)
 					->withParameters()
 					->get();
+
 				if ($endpoint->endpoint === $requestedUrl) {
 					if (
 						!in_array($method->httpMethodName, $this->appConfig->methodsAllowed)
@@ -132,8 +167,8 @@ final class RouteHandler
 		$sanitized = substr($url, strpos($url, "/"));
 		$sanitized =
 			$sanitized[strlen($sanitized) - 1] === "/"
-				? $sanitized
-				: $sanitized . "/";
+				? substr($sanitized, 0, strlen($sanitized) - 1)
+				: $sanitized;
 
 		return $sanitized;
 	}

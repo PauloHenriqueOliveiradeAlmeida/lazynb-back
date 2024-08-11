@@ -7,4 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Raven\\Quail\\Builders\\OpenApiDocument' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
+    'Raven\\Quail\\Builders\\OpenApiDocumentInfo' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
+    'Raven\\Quail\\Builders\\OpenApiDocumentMethod' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
+    'Raven\\Quail\\Builders\\OpenApiDocumentMethodParameters' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
+    'Raven\\Quail\\Builders\\OpenApiDocumentPath' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
+    'Raven\\Quail\\Builders\\OpenApiDocumentResponse' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
 );

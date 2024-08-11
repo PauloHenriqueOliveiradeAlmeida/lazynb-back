@@ -12,7 +12,7 @@ class EndpointBuilder
 	{
 		$this->url = $url;
 		$this->endpointData = new Endpoint();
-		$this->endpointData->endpoint = $endpoint;
+		$this->endpointData->endpoint = $this->formatUrl($endpoint);
 	}
 
 	public static function set(string $endpoint, string $url)
@@ -38,31 +38,40 @@ class EndpointBuilder
 		$endpoint = $this->endpointData->endpoint;
 		$colons = $this->getColonPositions($endpoint);
 
-		if (!$colons || count($colons) === 0) return $this;
+		if (!$colons || count($colons) === 0) {
+			return $this;
+		}
 
 		$parameters = [];
 		foreach ($colons as $colon) {
-			if ($colon >= strlen($this->url)) return $this;
+			if ($colon >= strlen($this->url)) {
+				return $this;
+			}
 
-			$firstSlashAfterColon = strpos($endpoint, '/', $colon);
+			$firstSlashAfterColon = strpos($endpoint, "/", $colon);
 			$nameLength = abs($firstSlashAfterColon - $colon);
 			$name = substr($endpoint, $colon, $nameLength);
-			$name = str_replace('/', '', $name);
-			$name = str_replace(':', '', $name);
+			$name = str_replace("/", "", $name);
+			$name = str_replace(":", "", $name);
 
-
-			$firstSlashAfterColon = strpos($this->url, '/', $colon);
+			$firstSlashAfterColon = strpos($this->url, "/", $colon);
 			$valueLength = abs($firstSlashAfterColon - $colon);
 			$value = substr($this->url, $colon, $valueLength);
-			$value = str_replace('/', '', $value);
+			$value = str_replace("/", "", $value);
 
 			$parameters = [...$parameters, $name => $value];
 		}
 
-		if (empty($parameters)) return $this;
+		if (empty($parameters)) {
+			return $this;
+		}
 
-		$urlWithParameters = str_replace(array_keys($parameters), array_values($parameters), $endpoint);
-		$urlWithParameters = str_replace(':', '', $urlWithParameters);
+		$urlWithParameters = str_replace(
+			array_keys($parameters),
+			array_values($parameters),
+			$endpoint
+		);
+		$urlWithParameters = str_replace(":", "", $urlWithParameters);
 		$this->endpointData->endpoint = $this->formatUrl($urlWithParameters);
 		$this->endpointData->parameters = $parameters;
 
@@ -71,18 +80,25 @@ class EndpointBuilder
 
 	private function formatUrl(string $url)
 	{
-		if (strlen($url) === 0) return "";
+		if (strlen($url) === 0) {
+			return "";
+		}
 		$urlLastChar = strlen($url) - 1;
-		return $url[$urlLastChar] === '/' ? trim($url) : trim($url) . '/';
+		$url = $url[0] === "/" ? $url : "/$url";
+		$url =
+			$url[$urlLastChar] === "/"
+				? substr(trim($url), 0, $url[$urlLastChar])
+				: trim($url);
+		return $url;
 	}
 
 	private function getColonPositions(string $endpoint)
 	{
 		$colons = [];
 		$lastColonPosition = 0;
-		while (($lastColonPosition = strpos($endpoint, ':', $lastColonPosition))) {
+		while ($lastColonPosition = strpos($endpoint, ":", $lastColonPosition)) {
 			array_push($colons, $lastColonPosition);
-			$lastColonPosition = $lastColonPosition + strlen(':');
+			$lastColonPosition = $lastColonPosition + strlen(":");
 		}
 
 		return $colons;

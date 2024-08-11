@@ -30,6 +30,12 @@ class ComposerStaticInitb30354356d0d28baa926a92d11a0efde
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Raven\\Quail\\Builders\\OpenApiDocument' => __DIR__ . '/..' . '/raven/src/Quail/Builders/OpenApiDocument.php',
+        'Raven\\Quail\\Builders\\OpenApiDocumentInfo' => __DIR__ . '/..' . '/raven/src/Quail/Builders/OpenApiDocument.php',
+        'Raven\\Quail\\Builders\\OpenApiDocumentMethod' => __DIR__ . '/..' . '/raven/src/Quail/Builders/OpenApiDocument.php',
+        'Raven\\Quail\\Builders\\OpenApiDocumentMethodParameters' => __DIR__ . '/..' . '/raven/src/Quail/Builders/OpenApiDocument.php',
+        'Raven\\Quail\\Builders\\OpenApiDocumentPath' => __DIR__ . '/..' . '/raven/src/Quail/Builders/OpenApiDocument.php',
+        'Raven\\Quail\\Builders\\OpenApiDocumentResponse' => __DIR__ . '/..' . '/raven/src/Quail/Builders/OpenApiDocument.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

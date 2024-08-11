@@ -10,7 +10,7 @@ use Raven\Falcon\Attributes\HttpMethods\Get;
 use Raven\Falcon\Attributes\HttpMethods\Delete;
 use Raven\Falcon\Http\Response;
 
-#[Controller(endpoint: "/api/clients")]
+#[Controller(endpoint: "clients")]
 class ClientsController
 {
 	#[Post]
@@ -21,7 +21,7 @@ class ClientsController
 		]);
 	}
 
-	#[Put(endpoint: ":id")]
+	#[Put(endpoint: ":id/:tenant")]
 	public function update(int $id)
 	{
 		return Response::sendBody([

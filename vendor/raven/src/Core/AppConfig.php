@@ -4,13 +4,22 @@ namespace Raven\Core;
 
 class AppConfig
 {
-
-	public array $controllers;
-	public ?array $methodsAllowed;
-
-	public function __construct(array $controllers, ?array $methodsAllowed = null)
-	{
-		$this->controllers = $controllers;
-		$this->methodsAllowed = $methodsAllowed ?? ["POST", "GET", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
+	public function __construct(
+		public array $controllers,
+		public string $basePath = "",
+		public ?array $staticFiles = [
+			"endpoint" => "/public",
+			"folder" => __DIR__ . "/public",
+		],
+		public ?array $methodsAllowed = [
+			"POST",
+			"GET",
+			"PUT",
+			"PATCH",
+			"DELETE",
+			"HEAD",
+			"OPTIONS",
+		]
+	) {
 	}
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Raven\Core;
 
 use Raven\Core\Exceptions\ExceptionHandler;
@@ -10,8 +9,6 @@ set_exception_handler(ExceptionHandler::throwException(...));
 
 class App
 {
-
-
 	public function __construct(AppConfig $appConfig)
 	{
 		$routeHandler = new RouteHandler($appConfig);

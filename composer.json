@@ -5,13 +5,15 @@
 		"psr-4": {
 			"App\\": "app/",
 			"Raven\\": "vendor/raven/src"
-		}
+		},
+		"classmap": [
+			"vendor/raven/src/Quail/Builders/OpenApiDocument.php"
+		]
 	},
 	"authors": [
 		{
 			"name": "PauloHenriqueOliveiradeAlmeida",
 			"email": "paulo333henrique00@gmail.com"
 		}
-	],
-	"require": {}
+	]
 }

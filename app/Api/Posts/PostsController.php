@@ -10,7 +10,7 @@ use Raven\Falcon\Attributes\HttpMethods\Get;
 use Raven\Falcon\Attributes\HttpMethods\Delete;
 use Raven\Falcon\Http\Response;
 
-#[Controller(endpoint: "/api/posts")]
+#[Controller(endpoint: "posts")]
 class PostsController
 {
 	#[Post]

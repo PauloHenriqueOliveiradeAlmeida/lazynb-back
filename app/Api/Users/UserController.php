@@ -6,7 +6,7 @@ use Raven\Falcon\Attributes\Controller;
 use Raven\Falcon\Attributes\HttpMethods\Get;
 use Raven\Falcon\Http\Response;
 
-#[Controller(endpoint: "/api/users")]
+#[Controller(endpoint: "users")]
 class UserController
 {
 	#[Get]
