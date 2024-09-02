@@ -49,7 +49,7 @@ class Documentation
 					IHttpMethod::class,
 					ReflectionAttribute::IS_INSTANCEOF
 				);
-
+				if (count($httpMethodAttributes) === 0) continue;
 				$controllerHttpMethod = $httpMethodAttributes[0];
 				$httpMethodName = strtoupper(
 					substr(

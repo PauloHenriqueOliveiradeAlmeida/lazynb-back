@@ -4,9 +4,7 @@ namespace App;
 
 require "vendor/autoload.php";
 
-use App\Api\Posts\PostsController;
-use App\Api\Clients\ClientsController;
-use App\Api\Users\UserController;
+use App\Api\Modules\Client\ClientController;
 use Raven\Core\App;
 use Raven\Core\AppConfig;
 use Raven\Quail\Builders\OpenApiDocumentBuilder;
@@ -14,9 +12,7 @@ use Raven\Quail\Documentation;
 
 $appConfig = new AppConfig(
 	controllers: [
-		UserController::class,
-		ClientsController::class,
-		PostsController::class,
+		ClientController::class
 	],
 	basePath: "/api"
 );

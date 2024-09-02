@@ -1,14 +1,16 @@
 <?php
 
+namespace App\Api\Shared\Database;
+
 require_once 'serverconfig.php';
 
 class Connection
 {
-	protected mysqli $connectionDB;
+	protected \mysqli $connectionDB;
 	public $id_inserted;
 	private function connectDB()
 	{
-		$this->connectionDB = new mysqli(server, user, password, db, port);
+		$this->connectionDB = new \mysqli(server, user, password, db, port);
 		if ($this->connectionDB->connect_errno) {
 			echo "Failed connection" . $this->connectionDB->connect_errno;
 			exit();

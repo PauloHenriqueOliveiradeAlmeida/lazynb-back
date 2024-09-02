@@ -132,7 +132,7 @@ final class RouteHandler
 				ReflectionAttribute::IS_INSTANCEOF
 			);
 			if (count($httpMethodAttributes) === 0) {
-				return;
+				continue;
 			}
 
 			$routeHttpMethod = $httpMethodAttributes[0];
