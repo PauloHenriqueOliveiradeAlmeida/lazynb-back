@@ -2,43 +2,45 @@
 
 namespace App\Api\Shared\Database;
 
-require_once 'serverconfig.php';
+use PDO;
+use PDOException;
+use Raven\Falcon\Http\Exceptions\ServiceUnavailableException;
 
 class Connection
 {
-	protected \mysqli $connectionDB;
-	public $id_inserted;
-	private function connectDB()
+	private ?PDO $connection;
+	public int $lastInsertedId;
+
+	private function connect()
 	{
-		$this->connectionDB = new \mysqli(server, user, password, db, port);
-		if ($this->connectionDB->connect_errno) {
-			echo "Failed connection" . $this->connectionDB->connect_errno;
-			exit();
-		} else {
-			return $this->connectionDB;
-		};
+		try {
+			$this->connection = !isset($this->connection) ? new PDO(
+				"pgsql:host=" . getenv('SERVER') . ";port=" . getenv('PORT') . ";dbname=" . getenv('DATABASE') . ";",
+				getenv("USER"),
+				getenv("PASSWORD")
+			) : $this->connection;
+		} catch (PDOException $exception) {
+			throw new ServiceUnavailableException("Unable to open database connection due to [ {$exception->getMessage()} ]");
+		}
 	}
 
-	private function closeDB()
+	private function close()
 	{
-		$this->connectionDB->close();
+		$this->connection = null;
 	}
 
 
-	public function queryDB(string $sql, array $params = [])
+	public function query(string $sql, array $params = [])
 	{
-		$this->connectDB();
-		$result = false;
-		$connection = $this->connectDB();
-		$stmt = $connection->prepare($sql);
-		$stmt->execute($params);
-		$result = $stmt->get_result();
-		$this->id_inserted = $connection->insert_id;
-		$this->closeDB();
+		$this->connect();
+		$query = $this->connection->prepare($sql);
+		$query->execute($params);
+		$result = $query->fetchAll(PDO::FETCH_ASSOC);
+		if (str_contains($sql, "CREATE"))
+			$this->lastInsertedId = $this->connection->lastInsertId() ?? $this->lastInsertedId;
+
+		$this->close();
+
 		return $result;
-	}
-
-	public function getLastInsertId() {
-		return $this->id_inserted;
 	}
 }
