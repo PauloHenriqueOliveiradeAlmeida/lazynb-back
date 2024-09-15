@@ -13,4 +13,5 @@ enum StatusCode: int
 	case METHOD_NOT_ALLOWED = 405;
 	case CONFLICT = 409;
 	case SERVER_ERROR = 500;
+	case SERVICE_UNAVAILABLE = 503;
 }

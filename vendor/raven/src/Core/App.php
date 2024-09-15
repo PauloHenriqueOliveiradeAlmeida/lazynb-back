@@ -11,6 +11,15 @@ class App
 {
 	public function __construct(AppConfig $appConfig)
 	{
+		$envFile = file(__DIR__ . '/../../../../.env');
+
+		if ($envFile) {
+			foreach ($envFile as $line) {
+				$line = trim(str_replace('\\n', '', $line));
+				putenv("$line");
+			}
+		}
+
 		$routeHandler = new RouteHandler($appConfig);
 		$routeHandler->manageRoute();
 	}
