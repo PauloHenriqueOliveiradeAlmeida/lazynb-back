@@ -37,12 +37,13 @@ class EndpointBuilder
 	{
 		$endpoint = $this->endpointData->endpoint;
 		$colons = $this->getColonPositions($endpoint);
+		$parameters = [];
+		$this->endpointData->parameters = $parameters;
 
 		if (!$colons || count($colons) === 0) {
 			return $this;
 		}
 
-		$parameters = [];
 		foreach ($colons as $colon) {
 			if ($colon >= strlen($this->url)) {
 				return $this;
@@ -87,8 +88,8 @@ class EndpointBuilder
 		$url = $url[0] === "/" ? $url : "/$url";
 		$url =
 			$url[$urlLastChar] === "/"
-				? substr(trim($url), 0, $url[$urlLastChar])
-				: trim($url);
+			? substr(trim($url), 0, $url[$urlLastChar])
+			: trim($url);
 		return $url;
 	}
 

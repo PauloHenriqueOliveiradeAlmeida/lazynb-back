@@ -2,15 +2,20 @@
 
 namespace Raven\Core\Route;
 
+use Raven\Cassowary\Validators\IValidator;
 use Raven\Core\AppConfig;
 use Raven\Core\Route\Dtos\ControllerDto;
 use Raven\Core\Route\Dtos\HttpMethodDto;
 use Raven\Falcon\Attributes\Controller;
 use Raven\Falcon\Attributes\HttpMethods\IHttpMethod;
+use Raven\Falcon\Attributes\Request\Body;
+use Raven\Falcon\Attributes\Request\IRequest;
+use Raven\Falcon\Attributes\Request\Param;
 use Raven\Falcon\Http\Exceptions\MethodNotAllowedException;
 use Raven\Falcon\Http\Exceptions\NotFoundException;
 use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionMethod;
 
 final class RouteHandler
 {
@@ -19,9 +24,7 @@ final class RouteHandler
 	 */
 	private array $controllers = [];
 
-	public function __construct(private readonly AppConfig $appConfig)
-	{
-	}
+	public function __construct(private readonly AppConfig $appConfig) {}
 
 	public function serveStaticFiles(string $folder, string $endpoint)
 	{
@@ -86,28 +89,39 @@ final class RouteHandler
 					if ($method->httpMethodName === $requestedMethod) {
 						$controllerInstance = new $controllerData->controller();
 
-						if (!isset($endpoint->parameters)) {
-							$controllerInstance->{$method->controllerMethod}();
+						$controllerMethod = new ReflectionMethod($controllerInstance, $method->controllerMethod);
+						$parameters = [];
+						foreach ($controllerMethod->getParameters()	as $methodParameter) {
+							$bodyAttributes = $methodParameter->getAttributes(Body::class, ReflectionAttribute::IS_INSTANCEOF);
+
+							if (count($bodyAttributes) > 0) {
+								$request = json_decode(file_get_contents('php://input'), false);
+
+								$attributeInstance = $bodyAttributes[0]->newInstance();
+								$parameter = $attributeInstance->convertRequestToData($request, $methodParameter->getType());
+
+								$reflectedClassParameter = new ReflectionClass($parameter::class);
+								$parameterProperties = $reflectedClassParameter->getProperties();
+
+								foreach ($parameterProperties as $parameterProperty) {
+									foreach ($parameterProperty->getAttributes(IValidator::class, ReflectionAttribute::IS_INSTANCEOF) as $parameterValidatorAttribute) {
+										$validator = $parameterValidatorAttribute->newInstance();
+										$validator->validate($parameterProperty->getName(), $parameter->{$parameterProperty->getName()});
+									}
+								}
+
+								array_push($parameters, $parameter);
+							}
+							$paramAttributes = $methodParameter->getAttributes(Param::class, ReflectionAttribute::IS_INSTANCEOF);
+							if (count($paramAttributes) === 0) continue;
+
+							$reflectedParamAttribute = $paramAttributes[0]->newInstance();
+							$param = $reflectedParamAttribute->convertRequestToData($endpoint->parameters, $methodParameter->getType()->getName());
+
+							array_push($parameters, $param);
 						}
 
-						$controllerMethod = new \ReflectionMethod(
-							$controllerInstance,
-							$method->controllerMethod
-						);
-						$controllerMethodRequestedParameters = array_map(
-							fn(\ReflectionParameter $param) => $param->getName(),
-							$controllerMethod->getParameters()
-						);
-						$parameters = array_filter(
-							$endpoint->parameters,
-							fn(string $paramName) => in_array(
-								$paramName,
-								$controllerMethodRequestedParameters
-							),
-							ARRAY_FILTER_USE_KEY
-						);
-
-						$controllerInstance->{$method->controllerMethod}(...$parameters);
+						return $controllerInstance->{$method->controllerMethod}(...$parameters);
 					}
 				}
 			}
@@ -167,8 +181,8 @@ final class RouteHandler
 		$sanitized = substr($url, strpos($url, "/"));
 		$sanitized =
 			$sanitized[strlen($sanitized) - 1] === "/"
-				? substr($sanitized, 0, strlen($sanitized) - 1)
-				: $sanitized;
+			? substr($sanitized, 0, strlen($sanitized) - 1)
+			: $sanitized;
 
 		return $sanitized;
 	}
