@@ -3,84 +3,76 @@
 namespace App\Api\Modules\Client;
 
 use App\Api\Modules\Client\Entity\ClientEntity;
-use mysqli_sql_exception;
+use Exception;
 use Raven\Falcon\Http\Response;
 use Raven\Falcon\Http\StatusCode;
-
-// require_once "client.dto.php";
+use PDOException;
+use Raven\Falcon\Http\Exceptions\BadRequestException;
+use Raven\Falcon\Http\Exceptions\NotFoundException;
 
 class ClientService
 {
-	// public static function create(array $data)
-	// {
-	// 	try {
-	// 		$dto = ClientDTO::validate(...$data);
-	// 		$client = new Client(...$dto);
-	// 		$client->create();
 
-	// 		return Response::sendBody([
-	// 			"message" => "Cliente criado com sucesso"
-	// 		], StatusCode::CREATED);
+	public function __construct(private readonly ClientEntity $clientEntity = new ClientEntity) {}
 
-	// 	} catch (mysqli_sql_exception $e) {
-	// 		switch ($e->getCode()) {
-	// 			case 1062:
-	// 				return Response::sendBody([
-	// 					"message" => "CPF ou email já cadastrados, tente com outros dados"
-	// 				], StatusCode::CONFLICT);
-	// 		}
-	// 	}
-	// }
-
-	public static function getAll()
+	public function create(ClientDto $clientDto)
 	{
 		try {
-			$client = new ClientEntity();
-			Response::sendBody($client->selectAll());
-		} catch (mysqli_sql_exception $e) {
-			Response::sendBody(["error" => $e], StatusCode::SERVER_ERROR);
+			$this->clientEntity->create($clientDto);
+			return Response::sendBody([
+				"message" => "Cliente criado com sucesso"
+			], StatusCode::CREATED);
+		} catch (Exception $e) {
+			throw new BadRequestException($e->getMessage());
 		}
 	}
 
-	// public static function getById($id)
-	// {
-	// 	try {
-	// 		$client = new ClientEntity();
-	// 		Response::sendBody($client->selectById($id));
-	// 	} catch (mysqli_sql_exception $e) {
-	// 		Response::sendBody(["error" => $e], StatusCode::SERVER_ERROR);
-	// 	}
-	// }
+	public function getAll()
+	{
+		try {
+			$clients = $this->clientEntity->selectAll();
+			return Response::sendBody($clients);
+		} catch (PDOException $e) {
+			throw new BadRequestException($e->getMessage());
+		}
+	}
 
-	// public static function update($id, array $data)
-	// {
-	// 	try {
-	// 		$dto = ClientDTO::validate(...$data);
+	public function getById(int $id)
+	{
+		try {
+			$client = $this->clientEntity->selectById($id);
 
-	// 		$old_data = Client::selectById($id);
-	// 		// $reflected_dto = UpdateManager::updateValuesFrom($old_data, $dto);
-	// 		$client = new Client(...$dto);
-	// 		$client->update($id);
+			if (!$client) throw new BadRequestException('Cliente não encontrado');
 
-	// 		Response::sendBody([
-	// 			"message" => "Cliente atualizado com sucesso"
-	// 		]);
-	// 	} catch (mysqli_sql_exception $e) {
-	// 		Response::sendBody(["message" => $e], StatusCode::SERVER_ERROR);
-	// 	}
-	// }
+			Response::sendBody($client);
+		} catch (PDOException $e) {
+			throw new BadRequestException($e->getMessage());
+		}
+	}
 
-	// public static function delete($id)
-	// {
-	// 	try {
-	// 		$client = new Client();
-	// 		$client->delete($id);
+	public function update(int $id, ClientDto $clientDto)
+	{
+		try {
+			$this->clientEntity->update($id, $clientDto);
+			Response::sendBody([
+				"message" => "Cliente atualizado com sucesso"
+			]);
+		} catch (PDOException $e) {
+			throw new BadRequestException($e->getMessage());
+		}
+	}
+	public function delete(int $id)
+	{
+		try {
+			$deletedClient = $this->clientEntity->delete($id);
 
-	// 		Response::sendBody([
-	// 			"message" => "Cliente excluído com sucesso"
-	// 		]);
-	// 	} catch (mysqli_sql_exception $e) {
-	// 		Response::sendBody(["message" => $e], StatusCode::SERVER_ERROR);
-	// 	}
-	// }
+			if (!$deletedClient) throw new NotFoundException("Cliente não encontrado");
+
+			Response::sendBody([
+				"message" => "Cliente removido com sucesso"
+			]);
+		} catch (PDOException $e) {
+			throw new BadRequestException($e->getMessage());
+		}
+	}
 }

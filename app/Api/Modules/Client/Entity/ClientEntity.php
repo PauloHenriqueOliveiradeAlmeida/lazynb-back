@@ -2,74 +2,48 @@
 
 namespace App\Api\Modules\Client\Entity;
 
+use App\Api\Modules\Client\ClientDto;
 use App\Api\Shared\Database\Connection;
 
 class ClientEntity
 {
-	private readonly string $name;
-	private readonly string $CPF;
-	private readonly string $phone_number;
-	private readonly string $email;
+	public function __construct(
+		private readonly Connection $connection = new Connection()
+	) {}
 
-
-	public function __construct(?string $name = '', ?string $CPF = '', ?string $phone_number = '', ?string $email = '')
+	public function create(ClientDto $clientDto)
 	{
-		$this->name = $name;
-		$this->CPF = $CPF;
-		$this->phone_number = $phone_number;
-		$this->email = $email;
-	}
-
-	public function create()
-	{
-		$connection = new Connection();
-
-		$query = $connection->queryDB(
-			"INSERT INTO clients (name, CPF, phone_number, email) VALUES (?, ?, ?, ?)",
-			[
-				$this->name,
-				$this->CPF,
-				$this->phone_number,
-				$this->email,
-			]
+		return $this->connection->query(
+			"INSERT INTO clients (name, CPF, phone_number, email) VALUES (:name, :cpf, :phone_number, :email)",
+			...(array) $clientDto
 		);
-		return $query;
 	}
 
 	public function selectAll()
 	{
-		$connection = new Connection();
-		$query = $connection->queryDB("SELECT id, name, email, phone_number, CPF FROM clients");
-		return $query->fetch_all(MYSQLI_ASSOC);
+		return $this->connection->query(
+			"SELECT id, name, email, phone_number, CPF FROM clients"
+		);
 	}
 
-	public static function selectById($id)
+	public function selectById(int $id)
 	{
-		$connection = new Connection();
-		$query = $connection->queryDB("SELECT name, email, phone_number, CPF FROM clients WHERE id = ?", [$id]);
-		return $query->fetch_assoc() ?? [];
+		return $this->connection->query("SELECT name, email, phone_number, CPF FROM clients WHERE id = :id", ['id' => $id]);
 	}
 
-	public function delete($id)
+	public function delete(int $id)
 	{
-		$connection = new Connection();
-		$query = $connection->queryDB("DELETE FROM clients WHERE id = ?", [$id]);
-		return $query;
+		return $this->connection->query("DELETE FROM clients WHERE id = :id", ['id' => $id]);
 	}
 
-	public function update($id)
+	public function update(int $id, ClientDto $clientDto)
 	{
-		$connection = new Connection();
-		$query = $connection->queryDB(
-			"UPDATE clients SET name=?, CPF=?, phone_number=?, email=? WHERE id = ?",
+		return	$this->connection->query(
+			"UPDATE clients SET name = :name, CPF = :cpf, phone_number = :phone_number, email = :email WHERE id = :id",
 			[
-				$this->name,
-				$this->CPF,
-				$this->phone_number,
-				$this->email,
-				$id
+				...(array) $clientDto,
+				'id' => $id
 			]
 		);
-		return $query;
 	}
 }
