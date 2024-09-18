@@ -6,11 +6,16 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
     'Raven\\Quail\\Builders\\OpenApiDocument' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
     'Raven\\Quail\\Builders\\OpenApiDocumentInfo' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
     'Raven\\Quail\\Builders\\OpenApiDocumentMethod' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
     'Raven\\Quail\\Builders\\OpenApiDocumentMethodParameters' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
     'Raven\\Quail\\Builders\\OpenApiDocumentPath' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
     'Raven\\Quail\\Builders\\OpenApiDocumentResponse' => $vendorDir . '/raven/src/Quail/Builders/OpenApiDocument.php',
+    'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+    'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+    'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
 );

@@ -15,8 +15,10 @@ class App
 
 		if ($envFile) {
 			foreach ($envFile as $line) {
+				if (trim($line)[0] === '#' || trim($line) === '') continue;
+
 				$line = trim(str_replace('\\n', '', $line));
-				putenv("$line");
+				putenv($line);
 			}
 		}
 
