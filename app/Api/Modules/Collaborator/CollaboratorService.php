@@ -1,33 +1,35 @@
 <?php
-require_once __DIR__ . "/../../../shared/interfaces/IController.interface.php";
-require_once __DIR__ . "/../../../shared/packages/http-response/http-response.php";
-require_once __DIR__ . "/../../../shared/utils/random-password/random-password.php";
-require_once __DIR__ . "/../../../shared/auth/auth.service.php";
-require_once "database/collaborator.model.php";
-require_once "dtos/login.dto.php";
-require_once "dtos/collaborator.dto.php";
 
-class CollaboratorController implements IController
+namespace App\Api\Modules\Collaborator;
+
+use App\Api\Modules\Collaborator\Dtos\CollaboratorDto;
+use App\Api\Modules\Collaborator\Entity\CollaboratorEntity;
+use App\Api\Shared\Services\Mailer\IMailer;
+use App\Api\Shared\Services\Mailer\MailerService;
+use PDOException;
+use Raven\Falcon\Http\Exceptions\BadRequestException;
+use Raven\Falcon\Http\Response;
+use Raven\Falcon\Http\StatusCode;
+
+class CollaboratorService
 {
-	public static function create(array $data)
+	private readonly MailerService $mailerService;
+	public function __construct(
+		IMailer $iMailer,
+		private readonly CollaboratorEntity $collaboratorEntity = new CollaboratorEntity,
+	) {
+		$this->mailerService = new MailerService($iMailer);
+	}
+
+	public function create(CollaboratorDto $collaboratorDto)
 	{
 		try {
-			$dto = CollaboratorDTO::validate(...$data);
-			$random_password = RandomPassword::generate();
-			$password = password_hash($random_password, PASSWORD_DEFAULT, [
-				'cost' => 15
-			]);
-			$collaborator = new Collaborator(...$dto, password: $password);
-			$collaborator->create();
+			$this->collaboratorEntity->create($collaboratorDto);
+			$this->mailerService->sendRegistrationCode($collaboratorDto->email);
 
-			HttpResponse::sendBody(["message" => $random_password], HttpResponse::CREATED);
-		} catch (mysqli_sql_exception $e) {
-			switch ($e->getCode()) {
-				case 1062:
-					HttpResponse::sendBody([
-						"message" => "O email ou cpf digitado já está cadastrado, tente novamente com outro valor"
-					], HttpResponse::CONFLICT);
-			}
+			Response::sendBody(["message" => "colaborador criado com sucesso"], StatusCode::CREATED);
+		} catch (PDOException $e) {
+			throw new BadRequestException($e->getMessage());
 		}
 	}
 
@@ -50,7 +52,7 @@ class CollaboratorController implements IController
 		}
 	}
 
-	public static function update($id, array $data)
+	public static function update($id, CollaboratorDto $collaboratorDto)
 	{
 		try {
 			$dto = CollaboratorDTO::validate(...array_diff_key($data, ['password' => '']));
@@ -115,7 +117,8 @@ class CollaboratorController implements IController
 		}
 	}
 
-	public static function login(array $data) {
+	public static function login(array $data)
+	{
 		try {
 			$dto = LoginDTO::validate(...$data);
 			$collaborator = new Collaborator();
@@ -132,13 +135,13 @@ class CollaboratorController implements IController
 			HttpResponse::sendBody([
 				"message" => "Login efetuado com sucesso"
 			]);
-		}
-		catch(mysqli_sql_exception $error) {
+		} catch (mysqli_sql_exception $error) {
 			HttpResponse::sendBody(["message" => $error->getMessage()], HttpResponse::SERVER_ERROR);
 		}
 	}
 
-	public static function logout() {
+	public static function logout()
+	{
 		Auth::logout();
 		HttpResponse::sendBody([
 			"message" => "Logout efetuado com sucesso"

@@ -5,6 +5,7 @@ namespace App;
 require "vendor/autoload.php";
 
 use App\Api\Modules\Client\ClientController;
+use App\Api\Modules\Collaborator\CollaboratorController;
 use Raven\Core\App;
 use Raven\Core\AppConfig;
 use Raven\Quail\Builders\OpenApiDocumentBuilder;
@@ -12,7 +13,8 @@ use Raven\Quail\Documentation;
 
 $appConfig = new AppConfig(
 	controllers: [
-		ClientController::class
+		ClientController::class,
+		CollaboratorController::class
 	],
 	basePath: "/api"
 );
