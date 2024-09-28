@@ -13,7 +13,7 @@ class IsInteger implements IValidator
 
 	public function validate(string $propertyName, $value): bool
 	{
-		if (gettype($value) !== 'integer') {
+		if (isset($value) && gettype($value) !== 'integer') {
 			throw new BadRequestException(
 				$this->message ?? "$propertyName is not a valid type, expected integer"
 			);

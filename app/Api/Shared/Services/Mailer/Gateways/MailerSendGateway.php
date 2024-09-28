@@ -29,8 +29,7 @@ class MailerSendGateway implements IMailer
 			->setPersonalization([$personalization])
 			->setSubject($subject);
 
-		$res = $this->mailerSend->email->send($params);
-		print_r($res);
+		$this->mailerSend->email->send($params);
 		return true;
 	}
 }
