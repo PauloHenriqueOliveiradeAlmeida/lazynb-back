@@ -8,11 +8,14 @@ use Raven\Core\Route\Dtos\ControllerDto;
 use Raven\Core\Route\Dtos\HttpMethodDto;
 use Raven\Falcon\Attributes\Controller;
 use Raven\Falcon\Attributes\HttpMethods\IHttpMethod;
+use Raven\Falcon\Attributes\Middlewares\Guard\UseGuard;
 use Raven\Falcon\Attributes\Request\Body;
-use Raven\Falcon\Attributes\Request\IRequest;
 use Raven\Falcon\Attributes\Request\Param;
 use Raven\Falcon\Http\Exceptions\MethodNotAllowedException;
 use Raven\Falcon\Http\Exceptions\NotFoundException;
+use Raven\Falcon\Http\Exceptions\UnauthorizedException;
+use Raven\Falcon\Http\Headers;
+use Raven\Falcon\Http\Request;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
@@ -72,6 +75,7 @@ final class RouteHandler
 		$requestedMethod = $_SERVER["REQUEST_METHOD"];
 
 		foreach ($this->controllers as $controllerData) {
+
 			foreach ($controllerData->methods as $method) {
 				$endpoint = EndpointBuilder::set($method->endpoint, $requestedUrl)
 					->withBase($controllerData->endpoint)
@@ -85,13 +89,57 @@ final class RouteHandler
 					) {
 						throw new MethodNotAllowedException();
 					}
+					if ($controllerData->guards) {
+						$headers = new Headers;
+						foreach (getallheaders() as $key => $value) {
+							$separatedKey = explode('-', $key);
+							$serializedKey = '';
+							foreach ($separatedKey as $keyIndex => $keyPart) {
+								if ($keyIndex === 0) {
+									$serializedKey .= strtolower($keyPart[0]) . substr($keyPart, 1);
+									continue;
+								}
+								$serializedKey .= strtoupper($keyPart[0]) . substr($keyPart, 1);
+							}
+							$headers->{$serializedKey} = $value;
+						}
+						$request = new Request($headers, (object) file_get_contents('php://input'));
+
+						foreach ($controllerData->guards as $guard) {
+							$verified = ($guard->newInstance())->verify($request);
+							if (!$verified)
+								throw new UnauthorizedException('Permission Denied');
+						}
+					}
 
 					if ($method->httpMethodName === $requestedMethod) {
 						$controllerInstance = new $controllerData->controller();
 
 						$controllerMethod = new ReflectionMethod($controllerInstance, $method->controllerMethod);
 						$parameters = [];
-						foreach ($controllerMethod->getParameters()	as $methodParameter) {
+						if ($method->guards) {
+							$headers = new Headers;
+							foreach (getallheaders() as $key => $value) {
+								$separatedKey = explode('-', $key);
+								$serializedKey = '';
+								foreach ($separatedKey as $keyIndex => $keyPart) {
+									if ($keyIndex === 0) {
+										$serializedKey .= strtolower($keyPart[0]) . substr($keyPart, 1);
+										continue;
+									}
+									$serializedKey .= strtoupper($keyPart[0]) . substr($keyPart, 1);
+								}
+								$headers->{$serializedKey} = $value;
+							}
+							$request = new Request($headers, (object) file_get_contents('php://input'));
+
+							foreach ($method->guards as $guard) {
+								$verified = ($guard->newInstance())->verify($request);
+								if (!$verified)
+									throw new UnauthorizedException('Permission Denied');
+							}
+						}
+						foreach ($controllerMethod->getParameters() as $methodParameter) {
 							$bodyAttributes = $methodParameter->getAttributes(Body::class, ReflectionAttribute::IS_INSTANCEOF);
 
 							if (count($bodyAttributes) > 0) {
@@ -105,15 +153,18 @@ final class RouteHandler
 
 								foreach ($parameterProperties as $parameterProperty) {
 									foreach ($parameterProperty->getAttributes(IValidator::class, ReflectionAttribute::IS_INSTANCEOF) as $parameterValidatorAttribute) {
-										$validator = $parameterValidatorAttribute->newInstance();
-										$validator->validate($parameterProperty->getName(), $parameter->{$parameterProperty->getName()});
+										if (isset($parameter->{$parameterProperty->getName()})) {
+											$validator = $parameterValidatorAttribute->newInstance();
+											$validator->validate($parameterProperty->getName(), $parameter->{$parameterProperty->getName()});
+										}
 									}
 								}
 
 								array_push($parameters, $parameter);
 							}
 							$paramAttributes = $methodParameter->getAttributes(Param::class, ReflectionAttribute::IS_INSTANCEOF);
-							if (count($paramAttributes) === 0) continue;
+							if (count($paramAttributes) === 0)
+								continue;
 
 							$reflectedParamAttribute = $paramAttributes[0]->newInstance();
 							$param = $reflectedParamAttribute->convertRequestToData($endpoint->parameters, $methodParameter->getType()->getName());
@@ -133,6 +184,8 @@ final class RouteHandler
 	{
 		$reflectedRoute = new ReflectionClass("\\$route");
 		$routeEndpoint = $reflectedRoute->getAttributes(Controller::class);
+		$routeGuards = $reflectedRoute->getAttributes(UseGuard::class);
+
 		if (count($routeEndpoint) === 0) {
 			throw new \Error("nao é uma rota válida");
 		}
@@ -148,7 +201,6 @@ final class RouteHandler
 			if (count($httpMethodAttributes) === 0) {
 				continue;
 			}
-
 			$routeHttpMethod = $httpMethodAttributes[0];
 			$httpMethodName = strtoupper(
 				substr(
@@ -156,10 +208,12 @@ final class RouteHandler
 					strrpos($routeHttpMethod->getName(), "\\") + 1
 				)
 			);
+			$methodGuards = $routeMethod->getAttributes(UseGuard::class);
 			$httpMethodDto = new HttpMethodDto(
 				$httpMethodName,
 				$routeMethod->getName(),
-				$routeHttpMethod->getArguments()["endpoint"] ?? ""
+				$routeHttpMethod->getArguments()["endpoint"] ?? "",
+				$methodGuards
 			);
 
 			array_push($httpMethods, $httpMethodDto);
@@ -167,7 +221,8 @@ final class RouteHandler
 		$controllerDto = new ControllerDto(
 			$routeEndpoint,
 			$reflectedRoute->getName(),
-			$httpMethods
+			$httpMethods,
+			$routeGuards
 		);
 		return $controllerDto;
 	}

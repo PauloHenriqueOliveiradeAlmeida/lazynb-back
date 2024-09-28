@@ -15,7 +15,7 @@ class ClientEntity
 	{
 		return $this->connection->query(
 			"INSERT INTO clients (name, CPF, phone_number, email) VALUES (:name, :cpf, :phone_number, :email)",
-			...(array) $clientDto
+			(array) $clientDto
 		);
 	}
 

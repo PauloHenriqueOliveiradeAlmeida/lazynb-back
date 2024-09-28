@@ -13,7 +13,7 @@ class IsString implements IValidator
 
 	public function validate(string $propertyName, $value): bool
 	{
-		if (gettype($value) !== 'string') {
+		if (isset($value) && gettype($value) !== 'string') {
 			throw new BadRequestException(
 				$this->message ?? "$propertyName is not a valid type, expected string"
 			);

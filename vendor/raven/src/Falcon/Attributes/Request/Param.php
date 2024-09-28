@@ -6,7 +6,7 @@ use Attribute;
 use Raven\Falcon\Http\Exceptions\BadRequestException;
 
 #[Attribute]
-class Param implements IRequest
+class Param
 {
 	public function __construct(
 		private readonly string $paramName

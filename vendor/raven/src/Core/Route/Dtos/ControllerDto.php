@@ -10,7 +10,7 @@ class ControllerDto
 	public function __construct(
 		public readonly string $endpoint,
 		public readonly string $controller,
-		public readonly array $methods
-	) {
-	}
+		public readonly array $methods,
+		public readonly array $guards
+	) {}
 }
