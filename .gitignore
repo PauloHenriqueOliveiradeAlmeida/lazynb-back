@@ -1,2 +1,6 @@
-
-server/models/serverconfig.php
+*.env
+package-lock.json
+yarn.lock
+node_modules
+vendor
+composer.lock
