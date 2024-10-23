@@ -20,6 +20,8 @@ COPY composer.json ./
 RUN composer install --no-dev --optimize-autoloader
 COPY . .
 
+ENV ENVIROMENT=production
+
 EXPOSE 8000
 
 CMD ["php", "raven", "start"]
