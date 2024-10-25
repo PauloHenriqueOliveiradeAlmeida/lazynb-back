@@ -15,9 +15,9 @@ class Connection
 	{
 		try {
 			$this->connection = !isset($this->connection) ? new PDO(
-				"pgsql:host=" . getenv('SERVER') . ";port=" . getenv('PORT') . ";dbname=" . getenv('DATABASE') . ";",
-				getenv("USER"),
-				getenv("PASSWORD")
+				"pgsql:host=" . getenv('DATABASE_SERVER') . ";port=" . getenv('DATABASE_PORT') . ";dbname=" . getenv('DATABASE_NAME') . ";",
+				getenv("DATABASE_USER"),
+				getenv("DATABASE_PASSWORD")
 			) : $this->connection;
 		} catch (PDOException $exception) {
 			throw new ServiceUnavailableException("Unable to open database connection due to [ {$exception->getMessage()} ]");

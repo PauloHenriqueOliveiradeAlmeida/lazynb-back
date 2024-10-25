@@ -4,7 +4,6 @@ namespace App\Api\Modules\Collaborator\Entity;
 
 use App\Api\Modules\Collaborator\Dtos\CollaboratorDto;
 use App\Api\Shared\Database\Connection;
-use stdClass;
 
 class CollaboratorEntity
 {
@@ -33,7 +32,7 @@ class CollaboratorEntity
 	public function selectById(int $id)
 	{
 		$collaborator = $this->connection->query("SELECT id, name, email, phone_number, CPF, is_admin FROM collaborators WHERE id = :id", ['id' => $id]);
-		return (object) $collaborator;
+		return (object) $collaborator[0];
 	}
 
 	/** @return CollaboratorDto */

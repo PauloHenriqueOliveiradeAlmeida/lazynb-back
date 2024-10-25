@@ -15,34 +15,41 @@ class TokenService
 		return "$headers.$payloadEncoded.$signature";
 	}
 
-	public function getPayload(string $token, string $secret)
+	/**
+	 * @template T
+	 * @param class-string<T> $payloadType
+	 * @return T
+	 **/
+	public function getPayload(string $token, string $secret, string $payloadType)
 	{
 		[$headers, $payloadEncoded, $signature] = explode('.', $token);
 
 		$secretHash = $this->encode(hash_hmac('sha512', "$headers.$payloadEncoded", $secret, true));
 
-		$payload = json_decode($this->decode($payloadEncoded));
+		$payloadArray = json_decode($this->decode($payloadEncoded));
 
 		if ($signature !== $secretHash)
 			throw new BadRequestException('Token inválido');
 
+		$payload = new $payloadType();
+		foreach ($payloadArray as $key => $value) {
+			$payload->{$key} = $value;
+		}
 		return $payload;
 	}
 
 	private function encode(string $value)
 	{
-		return str_replace(
-			['+', '/', '='],
-			['-', '_', ''],
-			base64_encode($value)
-		);
+		return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
 	}
 	private function decode(string $value)
 	{
-		return str_replace(
-			['-', '_', ''],
-			['+', '/', '='],
-			base64_decode($value)
+		return base64_decode(
+			strtr(
+				$value,
+				'-_',
+				'+/'
+			)
 		);
 	}
 }

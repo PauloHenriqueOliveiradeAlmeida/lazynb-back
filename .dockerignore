@@ -1,0 +1,14 @@
+# Composer packages
+vendor/
+
+# Editor config
+.vscode/
+
+# Git
+.gitignore
+
+# Application
+staynb.sql
+instalação.md
+.prettierrc
+

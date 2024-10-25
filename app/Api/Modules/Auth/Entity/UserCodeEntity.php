@@ -15,7 +15,7 @@ class UserCodeEntity
 	public function create(string $verification_code, int $user_id)
 	{
 		return $this->connection->query(
-			"INSERT INTO user_code (verification_code, userid) VALUES (:verification_code, :user_id)",
+			"INSERT INTO user_code (verification_code, user_id) VALUES (:verification_code, :user_id)",
 			[
 				'verification_code' => $verification_code,
 				'user_id' => $user_id
@@ -27,7 +27,7 @@ class UserCodeEntity
 	public function selectByUserId(int $id)
 	{
 		$userCode = $this->connection->query(
-			"SELECT id, verification_code, userid FROM user_code WHERE userid = :id",
+			"SELECT id, verification_code, userid FROM user_code WHERE user_id = :id",
 			['id' => $id]
 		);
 
@@ -42,7 +42,7 @@ class UserCodeEntity
 	public function update(string $verification_code, int $user_id)
 	{
 		return $this->connection->query(
-			"UPDATE user_code SET verification_code = :verification_code WHERE userid = :user_id",
+			"UPDATE user_code SET verification_code = :verification_code WHERE user_id = :user_id",
 			[
 				'verification_code' => $verification_code,
 				'user_id' => $user_id
@@ -54,7 +54,7 @@ class UserCodeEntity
 	{
 		return $this->connection->query(
 			"INSERT INTO user_code (verification_code, userid) VALUES (:verification_code, :user_id)
-			ON CONFLICT (userid) DO UPDATE SET verification_code = :verification_code",
+			ON CONFLICT (user_id) DO UPDATE SET verification_code = :verification_code",
 			['verification_code' => $verification_code, 'user_id' => $user_id]
 		);
 	}
