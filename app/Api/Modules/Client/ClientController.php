@@ -2,6 +2,7 @@
 
 namespace App\Api\Modules\Client;
 
+use App\Api\Modules\Client\ClientService;
 use App\Api\Shared\Guards\Enums\UserLevelEnum;
 use App\Api\Shared\Guards\UserGuard;
 use Raven\Falcon\Attributes\Controller;
@@ -36,14 +37,14 @@ class ClientController
 	}
 
 	#[Get]
-	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
+	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
 	public function getAll()
 	{
 		return $this->clientService->getAll();
 	}
 
 	#[Get(endpoint: ':id')]
-	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
+	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
 	public function getOne(#[Param(paramName: 'id')] int $id)
 	{
 		return $this->clientService->getById($id);
