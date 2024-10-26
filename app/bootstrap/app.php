@@ -19,6 +19,7 @@ $appConfig = new AppConfig(
 		ClientController::class,
 		CollaboratorController::class,
 		PropertyController::class,
+		AmenityController::class,
 		AuthController::class
 	],
 	basePath: "/api"
