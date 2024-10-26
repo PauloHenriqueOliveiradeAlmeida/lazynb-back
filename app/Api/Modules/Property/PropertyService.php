@@ -13,105 +13,118 @@ use Raven\Falcon\Http\Exceptions\NotFoundException;
 
 class PropertyService
 {
-    public function __construct(
-        private readonly PropertyEntity $propertyEntity = new PropertyEntity,
-        private readonly AmenityEntity $amenityEntity = new AmenityEntity
-    ) {}
+	public function __construct(
+		private readonly PropertyEntity $propertyEntity = new PropertyEntity,
+		private readonly AmenityEntity $amenityEntity = new AmenityEntity
+	) {}
 
-    public function create(PropertyDto $propertyDto)
-    {
-        try {
-			$this->propertyEntity->create($propertyDto);
+	public function create(PropertyDto $propertyDto)
+	{
+		try {
+			$propertyDto->complement = $propertyDto->complement ?? null;
 
-            return Response::sendBody([
-                "message" => "Propriedade criada com sucesso"
-            ], StatusCode::CREATED);
-        } catch (Exception $e) {
-            throw new BadRequestException($e->getMessage());
-        }
-    }
+			$propertyWithoutAmenities = clone $propertyDto;
+			unset($propertyWithoutAmenities->amenities);
+			$propertyId = $this->propertyEntity->create($propertyWithoutAmenities);
 
-    public function getAll()
-    {
-        try {
-            $properties = $this->propertyEntity->selectAll();
-            return Response::sendBody($properties);
-        } catch (PDOException $e) {
-            throw new BadRequestException($e->getMessage());
-        }
-    }
+			if (isset($propertyDto->amenities) && !empty($propertyDto->amenities)) {
+				$this->propertyEntity->connectAmenities($propertyDto->amenities, $propertyId);
+			}
 
-    public function getById(int $id)
-    {
-        try {
-            $property = $this->propertyEntity->selectById($id);
+			return Response::sendBody([
+				"message" => "Propriedade criada com sucesso"
+			], StatusCode::CREATED);
+		} catch (Exception $e) {
+			throw new BadRequestException($e->getMessage());
+		}
+	}
 
-            if (!$property) throw new NotFoundException('Propriedade não encontrada');
+	public function getAll()
+	{
+		try {
+			$properties = $this->propertyEntity->selectAll();
+			return Response::sendBody($properties);
+		} catch (PDOException $e) {
+			throw new BadRequestException($e->getMessage());
+		}
+	}
+
+	public function getById(int $id)
+	{
+		try {
+			$property = $this->propertyEntity->selectById($id);
+
+			if (!$property) throw new NotFoundException('Propriedade não encontrada');
 
 			Response::sendBody($property);
-        } catch (PDOException $e) {
-            throw new BadRequestException($e->getMessage());
-        }
-    }
+		} catch (PDOException $e) {
+			throw new BadRequestException($e->getMessage());
+		}
+	}
 
-    public function update(int $id, PropertyDTO $propertyDto)
-    {
-        try {
-            $existingProperty = $this->propertyEntity->selectById($id);
-            if (!$existingProperty) throw new NotFoundException("Propriedade não encontrada");
+	public function update(int $id, PropertyDTO $propertyDto)
+	{
+		try {
+			$existingProperty = $this->propertyEntity->selectById($id);
+			if (!$existingProperty) throw new NotFoundException("Propriedade não encontrada");
 
-            $this->propertyEntity->update($id, $propertyDto);
+			$propertyDto->complement = $propertyDto->complement ?? null;
+			$propertyWithoutAmenities = clone $propertyDto;
+			unset($propertyWithoutAmenities->amenities);
+			$this->propertyEntity->update($id, $propertyWithoutAmenities);
 
-            if (!empty($propertyDto->amenities)) {
-                $this->syncAmenities($id, $propertyDto->amenities);
-            }
+			if (isset($propertyDto->amenities) && !empty($propertyDto->amenities)) {
+				$this->syncAmenities($id, $propertyDto->amenities);
+			}
 
-            return Response::sendBody([
-                "message" => "Propriedade atualizada com sucesso"
-            ]);
-        } catch (PDOException $e) {
-            throw new BadRequestException($e->getMessage());
-        }
-    }
+			return Response::sendBody([
+				"message" => "Propriedade atualizada com sucesso"
+			]);
+		} catch (PDOException $e) {
+			throw new BadRequestException($e->getMessage());
+		}
+	}
 
-    public function delete(int $id)
-    {
-        try {
-            $deletedProperty = $this->propertyEntity->delete($id);
+	public function delete(int $id)
+	{
+		try {
+			$deletedProperty = $this->propertyEntity->delete($id);
 
-            if (!$deletedProperty) throw new NotFoundException("Propriedade não encontrada");
+			if (!$deletedProperty) throw new NotFoundException("Propriedade não encontrada");
 
-            return Response::sendBody([
-                "message" => "Propriedade removida com sucesso"
-            ]);
-        } catch (PDOException $e) {
-            throw new BadRequestException($e->getMessage());
-        }
-    }
+			return Response::sendBody([
+				"message" => "Propriedade removida com sucesso"
+			]);
+		} catch (PDOException $e) {
+			throw new BadRequestException($e->getMessage());
+		}
+	}
 
-    private function connectAmenities(int $propertyId, array $amenities)
-    {
-        foreach ($amenities as $amenityId) {
-            $this->amenityEntity->addAmenityToProperty($propertyId, $amenityId);
-        }
-    }
+	private function syncAmenities(int $propertyId, array $newAmenities)
+	{
+		$currentAmenities = $this->amenityEntity->selectByPropertyId($propertyId);
 
-    private function syncAmenities(int $propertyId, array $newAmenities)
-    {
-        $currentAmenities = $this->amenityEntity->selectByPropertyId($propertyId);
+		$toDelete = array_filter(
+			$currentAmenities,
+			fn($amenity) => !in_array($amenity['id'], $newAmenities)
+		);
 
-        $toDelete = array_filter($currentAmenities, function ($amenity) use ($newAmenities) {
-            return !in_array($amenity['id'], $newAmenities);
-        });
+		$toAdd = array_filter(
+			$newAmenities,
+			fn($amenityId) => !in_array($amenityId, array_column($currentAmenities, 'id'))
+		);
 
-        $toAdd = array_filter($newAmenities, function ($amenityId) use ($currentAmenities) {
-            return !in_array($amenityId, array_column($currentAmenities, 'id'));
-        });
+		if (!empty($toDelete)) {
+			$this->amenityEntity->deleteMany(array_column($toDelete, 'id'));
+		}
 
-        if (!empty($toDelete)) {
-            $this->amenityEntity->deleteMany(array_column($toDelete, 'id'));
-        }
+		$this->connectAmenities($propertyId, $toAdd);
+	}
 
-        $this->connectAmenities($propertyId, $toAdd);
-    }
+	private function connectAmenities(int $propertyId, array $amenities)
+	{
+		foreach ($amenities as $amenityId) {
+			$this->amenityEntity->addAmenityToProperty($propertyId, $amenityId);
+		}
+	}
 }

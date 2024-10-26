@@ -59,7 +59,7 @@ class CollaboratorService
 
 			if (!$collaborator) throw new NotFoundException('Colaborador não encontrado');
 
-			Response::sendBody($collaborator);
+			Response::sendBody((array) $collaborator);
 		} catch (PDOException $e) {
 			throw new BadRequestException($e->getMessage());
 		}

@@ -17,38 +17,42 @@ use Raven\Falcon\Attributes\Request\Param;
 #[Controller(endpoint: 'properties')]
 class PropertyController
 {
-    public function __construct(
-        private readonly PropertyService $propertyService = new PropertyService()
-    ) {}
+	public function __construct(
+		private readonly PropertyService $propertyService = new PropertyService()
+	) {}
 
-    #[Post]
+	#[Post]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
-    public function create(#[Body] PropertyDto $propertyDto)
-    {
-        return $this->propertyService->create($propertyDto);
-    }
+	public function create(#[Body] PropertyDto $propertyDto)
+	{
+		return $this->propertyService->create($propertyDto);
+	}
 
-    #[Put(endpoint: ':id')]
-    public function update(#[Body] PropertyDto $propertyDto, #[Param(paramName: 'id')] int $id)
-    {
-        return $this->propertyService->update($id, $propertyDto);
-    }
+	#[Put(endpoint: ':id')]
+	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
+	public function update(#[Body] PropertyDto $propertyDto, #[Param(paramName: 'id')] int $id)
+	{
+		return $this->propertyService->update($id, $propertyDto);
+	}
 
-    #[Get]
-    public function getAll()
-    {
-        return $this->propertyService->getAll();
-    }
+	#[Get]
+	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
+	public function getAll()
+	{
+		return $this->propertyService->getAll();
+	}
 
-    #[Get(endpoint: ':id')]
-    public function getOne(#[Param(paramName: 'id')] int $id)
-    {
-        return $this->propertyService->getById($id);
-    }
+	#[Get(endpoint: ':id')]
+	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
+	public function getOne(#[Param(paramName: 'id')] int $id)
+	{
+		return $this->propertyService->getById($id);
+	}
 
-    #[Delete(endpoint: ':id')]
-    public function delete(#[Param(paramName: 'id')] int $id)
-    {
-        return $this->propertyService->delete($id);
-    }
+	#[Delete(endpoint: ':id')]
+	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
+	public function delete(#[Param(paramName: 'id')] int $id)
+	{
+		return $this->propertyService->delete($id);
+	}
 }
