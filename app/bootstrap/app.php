@@ -4,9 +4,11 @@ namespace App;
 
 require "vendor/autoload.php";
 
+use App\Api\Modules\Amenity\AmenityController;
 use App\Api\Modules\Auth\AuthController;
 use App\Api\Modules\Client\ClientController;
 use App\Api\Modules\Collaborator\CollaboratorController;
+use App\Api\Modules\Property\PropertyController;
 use Raven\Core\App;
 use Raven\Core\AppConfig;
 use Raven\Quail\Builders\OpenApiDocumentBuilder;
@@ -16,6 +18,8 @@ $appConfig = new AppConfig(
 	controllers: [
 		ClientController::class,
 		CollaboratorController::class,
+		PropertyController::class,
+		AmenityController::class,
 		AuthController::class
 	],
 	basePath: "/api"
