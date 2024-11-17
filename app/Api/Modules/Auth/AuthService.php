@@ -67,6 +67,10 @@ class AuthService
 
 			$this->userCodeEntity->update($verificationCode, $user->id);
 			$this->mailerService->sendRegistrationCode($sendFirstAccessEmailDto->email, $verificationCode);
+
+			return Response::sendBody([
+				'message' => 'Um email com o código de verificação foi enviado',
+			]);
 		} catch (PDOException $error) {
 			throw new BadRequestException($error->getMessage());
 		}
