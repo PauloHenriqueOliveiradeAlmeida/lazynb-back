@@ -110,6 +110,10 @@ class AuthService
 			$verificationCode = $this->codeService->generateRandom();
 			$this->userCodeEntity->upsert($verificationCode, $user->id);
 			$this->mailerService->sendResetPassword($sendResetPasswordEmailDto->email, $verificationCode);
+
+			return Response::sendBody([
+				"message" => "Email enviado com sucesso"
+			]);
 		} catch (PDOException $error) {
 			throw new BadRequestException($error->getMessage());
 		}

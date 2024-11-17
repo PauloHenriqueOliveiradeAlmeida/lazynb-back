@@ -3,6 +3,7 @@
 		"format": "prettier"
 	},
 	"dependencies": {
-		"@prettier/plugin-php": "^0.22.2"
+		"@prettier/plugin-php": "^0.22.2",
+		"pg": "^8.13.0"
 	}
 }

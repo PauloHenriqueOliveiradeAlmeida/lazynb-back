@@ -2,8 +2,12 @@
 
 namespace App\Api\Modules\Client;
 
+use App\Api\Modules\Client\ClientService;
+use App\Api\Modules\Client\Dtos\ClientDto;
 use App\Api\Shared\Guards\Enums\UserLevelEnum;
 use App\Api\Shared\Guards\UserGuard;
+use App\Api\Shared\Services\Mailer\Dtos\SendConversationInviteDto;
+use App\Api\Shared\Services\Mailer\Gateways\MailerSendGateway;
 use Raven\Falcon\Attributes\Controller;
 use Raven\Falcon\Attributes\HttpMethods\Delete;
 use Raven\Falcon\Attributes\HttpMethods\Get;
@@ -18,7 +22,7 @@ class ClientController
 {
 
 	public function __construct(
-		private readonly ClientService $clientService = new ClientService()
+		private readonly ClientService $clientService = new ClientService(new MailerSendGateway)
 	) {}
 
 	#[Post]
@@ -36,14 +40,14 @@ class ClientController
 	}
 
 	#[Get]
-	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
+	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
 	public function getAll()
 	{
 		return $this->clientService->getAll();
 	}
 
 	#[Get(endpoint: ':id')]
-	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
+	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
 	public function getOne(#[Param(paramName: 'id')] int $id)
 	{
 		return $this->clientService->getById($id);
@@ -54,5 +58,11 @@ class ClientController
 	public function delete(#[Param(paramName: 'id')] int $id)
 	{
 		return $this->clientService->delete($id);
+	}
+
+	#[Post(endpoint: 'send-conversation-invite-email')]
+	public function sendConversationInviteEmail(#[Body] SendConversationInviteDto $sendConversationInviteDto)
+	{
+		return $this->clientService->sendConversationInviteEmail($sendConversationInviteDto);
 	}
 }
