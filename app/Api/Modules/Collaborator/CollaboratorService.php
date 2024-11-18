@@ -6,8 +6,6 @@ use App\Api\Modules\Auth\Entity\UserCodeEntity;
 use App\Api\Modules\Collaborator\Dtos\CollaboratorDto;
 use App\Api\Modules\Collaborator\Entity\CollaboratorEntity;
 use App\Api\Shared\Services\Code\CodeService;
-use App\Api\Shared\Services\Mailer\IMailer;
-use App\Api\Shared\Services\Mailer\MailerService;
 use PDOException;
 use Raven\Falcon\Http\Exceptions\BadRequestException;
 use Raven\Falcon\Http\Exceptions\NotFoundException;
@@ -16,26 +14,17 @@ use Raven\Falcon\Http\StatusCode;
 
 class CollaboratorService
 {
-	private readonly MailerService $mailerService;
 	public function __construct(
-		IMailer $iMailer,
 		private readonly CollaboratorEntity $collaboratorEntity = new CollaboratorEntity,
 		private readonly UserCodeEntity $userCodeEntity = new UserCodeEntity,
 		private readonly CodeService $codeService = new CodeService
-	) {
-		$this->mailerService = new MailerService($iMailer);
-	}
+	) {}
 
 	public function create(CollaboratorDto $collaboratorDto)
 	{
 		try {
 			$this->collaboratorEntity->create($collaboratorDto);
-			$createdUser = $this->collaboratorEntity->selectByEmail($collaboratorDto->email);
 
-			$verificationCode = $this->codeService->generateRandom();
-
-			$this->userCodeEntity->create($verificationCode, $createdUser->id);
-			$this->mailerService->sendRegistrationCode($collaboratorDto->email, $verificationCode);
 
 			return Response::sendBody(["message" => "colaborador criado com sucesso"], StatusCode::CREATED);
 		} catch (PDOException $e) {

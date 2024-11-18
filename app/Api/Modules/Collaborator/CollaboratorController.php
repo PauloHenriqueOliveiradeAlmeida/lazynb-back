@@ -6,7 +6,6 @@ use App\Api\Modules\Collaborator\CollaboratorService;
 use App\Api\Modules\Collaborator\Dtos\CollaboratorDto;
 use App\Api\Shared\Guards\Enums\UserLevelEnum;
 use App\Api\Shared\Guards\UserGuard;
-use App\Api\Shared\Services\Mailer\Gateways\MailerSendGateway;
 use Raven\Falcon\Attributes\Controller;
 use Raven\Falcon\Attributes\HttpMethods\Delete;
 use Raven\Falcon\Attributes\HttpMethods\Get;
@@ -21,7 +20,7 @@ class CollaboratorController
 {
 
 	public function __construct(
-		private readonly CollaboratorService $collaboratorService = new CollaboratorService(new MailerSendGateway)
+		private readonly CollaboratorService $collaboratorService = new CollaboratorService()
 	) {}
 
 	#[Post]
