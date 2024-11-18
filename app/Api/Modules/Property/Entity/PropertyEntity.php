@@ -60,6 +60,14 @@ class PropertyEntity
 		);
 	}
 
+	public function selectByClientId(int $clientId)
+	{
+		return $this->connection->query(
+			"SELECT id, name, cep, neighborhood, address_number, complement, city, uf, description, clientid FROM properties WHERE clientid = :clientid",
+			['clientid' => $clientId]
+		);
+	}
+
 	public function delete(int $id)
 	{
 		$this->connection->query("DELETE FROM properties_amenities WHERE propertyid = :id", ['id' => $id]);
