@@ -6,7 +6,8 @@ use App\Api\Modules\Auth\Dtos\FirstAccessDto;
 use App\Api\Modules\Auth\Dtos\LoginDto;
 use App\Api\Modules\Auth\Dtos\ResetPasswordDto;
 use App\Api\Modules\Auth\Dtos\SendEmailDto;
-use App\Api\Shared\Services\Mailer\Gateways\MailerSendGateway;
+use App\Api\Modules\Auth\Dtos\VerifyResetPasswordCodeDto;
+use App\Api\Shared\Services\Mailer\Gateways\PhpMailerGateway;
 use Raven\Falcon\Attributes\Controller;
 use Raven\Falcon\Attributes\HttpMethods\Post;
 use Raven\Falcon\Attributes\Request\Body;
@@ -16,7 +17,7 @@ class AuthController
 {
 
 	public function __construct(
-		private readonly AuthService $authService = new AuthService(new MailerSendGateway)
+		private readonly AuthService $authService = new AuthService(new PhpMailerGateway)
 	) {}
 
 	#[Post(endpoint: 'login')]
@@ -41,6 +42,12 @@ class AuthController
 	public function sendResetPasswordEmail(#[Body] SendEmailDto $sendResetPasswordEmailDto)
 	{
 		return $this->authService->sendResetPasswordEmail($sendResetPasswordEmailDto);
+	}
+
+	#[Post(endpoint: 'verify-reset-password-code')]
+	public function verifyResetPasswordCode(#[Body] VerifyResetPasswordCodeDto $verifyResetPasswordCodeDto)
+	{
+		return $this->authService->verifyResetPasswordCode($verifyResetPasswordCodeDto);
 	}
 
 	#[Post(endpoint: 'reset-password')]
