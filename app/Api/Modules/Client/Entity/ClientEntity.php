@@ -28,7 +28,7 @@ class ClientEntity
 
 	public function selectById(int $id)
 	{
-		return $this->connection->query("SELECT name, email, phone_number, CPF FROM clients WHERE id = :id", ['id' => $id]);
+		return $this->connection->query("SELECT name, email, phone_number, CPF FROM clients WHERE id = :id", ['id' => $id])[0];
 	}
 
 	public function delete(int $id)

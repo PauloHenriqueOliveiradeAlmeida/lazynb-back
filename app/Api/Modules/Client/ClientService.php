@@ -4,6 +4,8 @@ namespace App\Api\Modules\Client;
 
 use App\Api\Modules\Client\Dtos\ClientDto;
 use App\Api\Modules\Client\Entity\ClientEntity;
+use App\Api\Modules\Property\Entity\PropertyEntity;
+use App\Api\Shared\Filters\DatabaseOperation\DatabaseOperationFilter;
 use App\Api\Shared\Services\Mailer\Dtos\SendConversationInviteDto;
 use App\Api\Shared\Services\Mailer\IMailer;
 use App\Api\Shared\Services\Mailer\MailerService;
@@ -19,7 +21,9 @@ class ClientService
 	private MailerService $mailerService;
 	public function __construct(
 		IMailer $iMailer,
-		private readonly ClientEntity $clientEntity = new ClientEntity
+		private readonly ClientEntity $clientEntity = new ClientEntity,
+		private readonly PropertyEntity $propertyEntity = new PropertyEntity,
+		private readonly DatabaseOperationFilter $databaseOperationFilter = new DatabaseOperationFilter
 	) {
 		$this->mailerService = new MailerService($iMailer);
 	}
@@ -33,7 +37,7 @@ class ClientService
 				"message" => "Cliente criado com sucesso"
 			], StatusCode::CREATED);
 		} catch (Exception $e) {
-			throw new BadRequestException($e->getMessage());
+			$this->databaseOperationFilter->handle($e);
 		}
 	}
 
@@ -76,6 +80,10 @@ class ClientService
 	public function delete(int $id)
 	{
 		try {
+			$this->propertyEntity->selectByClientId($id);
+
+			if ($this->propertyEntity->selectByClientId($id)) throw new BadRequestException("Cliente possui imóveis cadastrados");
+
 			$deletedClient = $this->clientEntity->delete($id);
 
 			if (!$deletedClient) throw new NotFoundException("Cliente não encontrado");
