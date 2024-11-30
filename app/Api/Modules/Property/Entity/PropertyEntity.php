@@ -52,13 +52,17 @@ class PropertyEntity
 			['id' => $id]
 		);
 
-		return array_map(
-			fn($row) => $row['amenities'] !== null ?
-				[...$row, 'amenities' =>
-				str_replace(['{', '}'], '', explode(',', $row['amenities']))] : $row,
+		$result = array_map(
+			fn($row) => $row['amenities'] !== null
+				? array_merge($row, ['amenities' => array_map('trim', explode(',', str_replace(['{', '}', '"'], '', $row['amenities'])))] )
+				: $row,
 			$query
 		);
+
+		return $result[0] ?? null;
 	}
+
+
 
 	public function selectByClientId(int $clientId)
 	{

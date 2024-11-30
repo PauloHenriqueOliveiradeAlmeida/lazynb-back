@@ -22,7 +22,6 @@ class PropertyController
 	) {}
 
 	#[Post]
-	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
 	public function create(#[Body] PropertyDto $propertyDto)
 	{
 		return $this->propertyService->create($propertyDto);
@@ -43,8 +42,7 @@ class PropertyController
 	}
 
 	#[Get(endpoint: ':id')]
-	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
-	public function getOne(#[Param(paramName: 'id')] int $id)
+	public function get(#[Param(paramName: 'id')] int $id)
 	{
 		return $this->propertyService->getById($id);
 	}
