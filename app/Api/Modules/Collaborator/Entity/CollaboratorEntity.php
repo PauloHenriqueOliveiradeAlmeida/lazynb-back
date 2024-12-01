@@ -32,6 +32,7 @@ class CollaboratorEntity
 	public function selectById(int $id)
 	{
 		$collaborator = $this->connection->query("SELECT id, name, email, phone_number, CPF, is_admin FROM collaborators WHERE id = :id", ['id' => $id]);
+		if (count($collaborator) === 0) return null;
 		return (object) $collaborator[0];
 	}
 

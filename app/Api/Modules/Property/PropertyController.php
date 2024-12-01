@@ -2,6 +2,7 @@
 
 namespace App\Api\Modules\Property;
 
+use App\Api\Modules\Property\Dtos\PropertyDto;
 use App\Api\Modules\Property\PropertyService;
 use App\Api\Shared\Guards\Enums\UserLevelEnum;
 use App\Api\Shared\Guards\UserGuard;

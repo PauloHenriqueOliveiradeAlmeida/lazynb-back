@@ -27,7 +27,6 @@ class UserGuard implements IGuard
 
 		$payload = $this->tokenService->getPayload($authorizationToken, getenv("JWT_SECRET"), TokenPayloadDto::class);
 		$user = $this->collaboratorEntity->selectById($payload->id);
-
 		if (!$user) throw new UnauthorizedException('Token inválido');
 		if ($this->userLevel === UserLevelEnum::ALL) return true;
 		return $this->userLevel->value === (int) $user->is_admin;

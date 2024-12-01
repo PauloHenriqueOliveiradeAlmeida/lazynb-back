@@ -4,6 +4,7 @@ namespace App\Api\Modules\Property;
 
 use App\Api\Modules\Property\Entity\PropertyEntity;
 use App\Api\Modules\Amenity\Entity\AmenityEntity;
+use App\Api\Modules\Property\Dtos\PropertyDto;
 use Exception;
 use Raven\Falcon\Http\Response;
 use Raven\Falcon\Http\StatusCode;
