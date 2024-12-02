@@ -7,7 +7,7 @@ use App\Api\Modules\Auth\Dtos\LoginDto;
 use App\Api\Modules\Auth\Dtos\ResetPasswordDto;
 use App\Api\Modules\Auth\Dtos\SendEmailDto;
 use App\Api\Modules\Auth\Dtos\VerifyResetPasswordCodeDto;
-use App\Api\Shared\Services\Mailer\Gateways\PhpMailerGateway;
+use App\Api\Shared\Services\Mailer\Gateways\MailerSendGateway;
 use Raven\Falcon\Attributes\Controller;
 use Raven\Falcon\Attributes\HttpMethods\Post;
 use Raven\Falcon\Attributes\Request\Body;
@@ -17,7 +17,7 @@ class AuthController
 {
 
 	public function __construct(
-		private readonly AuthService $authService = new AuthService(new PhpMailerGateway)
+		private readonly AuthService $authService = new AuthService(new MailerSendGateway)
 	) {}
 
 	#[Post(endpoint: 'login')]

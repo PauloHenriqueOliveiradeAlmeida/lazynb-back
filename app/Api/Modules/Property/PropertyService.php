@@ -5,6 +5,8 @@ namespace App\Api\Modules\Property;
 use App\Api\Modules\Property\Entity\PropertyEntity;
 use App\Api\Modules\Amenity\Entity\AmenityEntity;
 use App\Api\Modules\Property\Dtos\PropertyDto;
+use App\Api\Shared\Services\Cep\CepService;
+use App\Api\Shared\Services\Cep\ICep;
 use Exception;
 use Raven\Falcon\Http\Response;
 use Raven\Falcon\Http\StatusCode;
@@ -14,10 +16,14 @@ use Raven\Falcon\Http\Exceptions\NotFoundException;
 
 class PropertyService
 {
+	private readonly CepService $cepService;
 	public function __construct(
+		private readonly ICep $cepGateway,
 		private readonly PropertyEntity $propertyEntity = new PropertyEntity,
 		private readonly AmenityEntity $amenityEntity = new AmenityEntity
-	) {}
+	) {
+		$this->cepService = new CepService($this->cepGateway);
+	}
 
 	public function create(PropertyDto $propertyDto)
 	{
@@ -99,6 +105,11 @@ class PropertyService
 		} catch (PDOException $e) {
 			throw new BadRequestException($e->getMessage());
 		}
+	}
+
+	public function getAddressByCep(string $cep)
+	{
+		return Response::sendBody((array)$this->cepService->getAddress($cep));
 	}
 
 	private function syncAmenities(int $propertyId, array $newAmenities)
