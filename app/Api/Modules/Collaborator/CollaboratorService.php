@@ -5,9 +5,10 @@ namespace App\Api\Modules\Collaborator;
 use App\Api\Modules\Auth\Entity\UserCodeEntity;
 use App\Api\Modules\Collaborator\Dtos\CollaboratorDto;
 use App\Api\Modules\Collaborator\Entity\CollaboratorEntity;
+use App\Api\Shared\Filters\DatabaseOperation\DatabaseOperationFilter;
+use App\Api\Shared\Guards\Dtos\TokenPayloadDto;
 use App\Api\Shared\Services\Code\CodeService;
-use App\Api\Shared\Services\Mailer\IMailer;
-use App\Api\Shared\Services\Mailer\MailerService;
+use App\Api\Shared\Services\Token\TokenService;
 use PDOException;
 use Raven\Falcon\Http\Exceptions\BadRequestException;
 use Raven\Falcon\Http\Exceptions\NotFoundException;
@@ -16,30 +17,21 @@ use Raven\Falcon\Http\StatusCode;
 
 class CollaboratorService
 {
-	private readonly MailerService $mailerService;
 	public function __construct(
-		IMailer $iMailer,
 		private readonly CollaboratorEntity $collaboratorEntity = new CollaboratorEntity,
 		private readonly UserCodeEntity $userCodeEntity = new UserCodeEntity,
-		private readonly CodeService $codeService = new CodeService
-	) {
-		$this->mailerService = new MailerService($iMailer);
-	}
+		private readonly CodeService $codeService = new CodeService,
+		private readonly TokenService $tokenService = new TokenService,
+		private readonly DatabaseOperationFilter $databaseOperationFilter = new DatabaseOperationFilter
+	) {}
 
 	public function create(CollaboratorDto $collaboratorDto)
 	{
 		try {
 			$this->collaboratorEntity->create($collaboratorDto);
-			$createdUser = $this->collaboratorEntity->selectByEmail($collaboratorDto->email);
-
-			$verificationCode = $this->codeService->generateRandom();
-
-			$this->userCodeEntity->create($verificationCode, $createdUser->id);
-			$this->mailerService->sendRegistrationCode($collaboratorDto->email, $verificationCode);
-
-			Response::sendBody(["message" => "colaborador criado com sucesso"], StatusCode::CREATED);
+			return Response::sendBody(["message" => "colaborador criado com sucesso"], StatusCode::CREATED);
 		} catch (PDOException $e) {
-			throw new BadRequestException($e->getMessage());
+			$this->databaseOperationFilter->handle($e);
 		}
 	}
 
@@ -47,7 +39,10 @@ class CollaboratorService
 	{
 		try {
 			$collaborators = $this->collaboratorEntity->selectAll();
-			Response::sendBody($collaborators);
+			$user = $this->tokenService->getPayload(explode(' ', getallheaders()['Authorization'])[1], getenv("JWT_SECRET"), TokenPayloadDto::class);
+			$filteredCollaborators = [...array_filter($collaborators, fn($collaborator) => $collaborator['id'] !== $user->id)];
+
+			return Response::sendBody($filteredCollaborators);
 		} catch (PDOException $e) {
 			throw new BadRequestException($e->getMessage());
 		}
@@ -59,7 +54,7 @@ class CollaboratorService
 
 			if (!$collaborator) throw new NotFoundException('Colaborador não encontrado');
 
-			Response::sendBody($collaborator);
+			return Response::sendBody((array) $collaborator);
 		} catch (PDOException $e) {
 			throw new BadRequestException($e->getMessage());
 		}
@@ -70,7 +65,7 @@ class CollaboratorService
 		try {
 			$this->collaboratorEntity->update($id, $collaboratorDto);
 
-			Response::sendBody([
+			return Response::sendBody([
 				"message" => "Colaborador editado com sucesso"
 			]);
 		} catch (PDOException $e) {
@@ -85,7 +80,7 @@ class CollaboratorService
 
 			if (!$deletedCollaborator) throw new NotFoundException('Colaborador não encontrado');
 
-			Response::sendBody([
+			return Response::sendBody([
 				"message" => "Colaborador excluído com sucesso"
 			]);
 		} catch (PDOException $e) {

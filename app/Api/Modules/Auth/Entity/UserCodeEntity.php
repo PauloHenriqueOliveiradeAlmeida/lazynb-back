@@ -27,7 +27,7 @@ class UserCodeEntity
 	public function selectByUserId(int $id)
 	{
 		$userCode = $this->connection->query(
-			"SELECT id, verification_code, userid FROM user_code WHERE user_id = :id",
+			"SELECT id, verification_code, user_id FROM user_code WHERE user_id = :id",
 			['id' => $id]
 		);
 
@@ -53,7 +53,7 @@ class UserCodeEntity
 	public function upsert(string $verification_code, int $user_id)
 	{
 		return $this->connection->query(
-			"INSERT INTO user_code (verification_code, userid) VALUES (:verification_code, :user_id)
+			"INSERT INTO user_code (verification_code, user_id) VALUES (:verification_code, :user_id)
 			ON CONFLICT (user_id) DO UPDATE SET verification_code = :verification_code",
 			['verification_code' => $verification_code, 'user_id' => $user_id]
 		);

@@ -11,7 +11,7 @@ class ResetPasswordDto
 {
 	#[IsRequired]
 	#[IsString]
-	#[Length(min: 8, max: 8)]
+	#[Length(min: 6, max: 6, message: 'O código de verificação deve ter 6 caracteres')]
 	public string $verificationCode;
 
 

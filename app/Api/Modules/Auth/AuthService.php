@@ -6,6 +6,7 @@ use App\Api\Modules\Auth\Dtos\FirstAccessDto;
 use App\Api\Modules\Auth\Dtos\LoginDto;
 use App\Api\Modules\Auth\Dtos\ResetPasswordDto;
 use App\Api\Modules\Auth\Dtos\SendEmailDto;
+use App\Api\Modules\Auth\Dtos\VerifyResetPasswordCodeDto;
 use App\Api\Modules\Auth\Entity\UserCodeEntity;
 use App\Api\Modules\Collaborator\Entity\CollaboratorEntity;
 use App\Api\Shared\Services\Code\CodeService;
@@ -33,7 +34,7 @@ class AuthService
 		$this->mailerService = new MailerService($iMailer);
 	}
 
-	function login(LoginDto $loginDto)
+	public function login(LoginDto $loginDto)
 	{
 		try {
 			$user = $this->collaboratorEntity->selectByEmail($loginDto->email);
@@ -56,7 +57,7 @@ class AuthService
 		}
 	}
 
-	function sendFirstAccessEmail(SendEmailDto $sendFirstAccessEmailDto)
+	public function sendFirstAccessEmail(SendEmailDto $sendFirstAccessEmailDto)
 	{
 		try {
 			$user = $this->collaboratorEntity->selectByEmail($sendFirstAccessEmailDto->email);
@@ -65,14 +66,18 @@ class AuthService
 
 			$verificationCode = $this->codeService->generateRandom();
 
-			$this->userCodeEntity->update($verificationCode, $user->id);
+			$this->userCodeEntity->upsert($verificationCode, $user->id);
 			$this->mailerService->sendRegistrationCode($sendFirstAccessEmailDto->email, $verificationCode);
+
+			return Response::sendBody([
+				'message' => 'Um email com o código de verificação foi enviado',
+			]);
 		} catch (PDOException $error) {
 			throw new BadRequestException($error->getMessage());
 		}
 	}
 
-	function firstAccess(FirstAccessDto $firstAccessDto)
+	public function firstAccess(FirstAccessDto $firstAccessDto)
 	{
 		try {
 			$user = $this->collaboratorEntity->selectByEmail($firstAccessDto->email);
@@ -96,7 +101,7 @@ class AuthService
 		}
 	}
 
-	function sendResetPasswordEmail(SendEmailDto $sendResetPasswordEmailDto)
+	public function sendResetPasswordEmail(SendEmailDto $sendResetPasswordEmailDto)
 	{
 		try {
 			$user = $this->collaboratorEntity->selectByEmail($sendResetPasswordEmailDto->email);
@@ -106,12 +111,36 @@ class AuthService
 			$verificationCode = $this->codeService->generateRandom();
 			$this->userCodeEntity->upsert($verificationCode, $user->id);
 			$this->mailerService->sendResetPassword($sendResetPasswordEmailDto->email, $verificationCode);
+
+			return Response::sendBody([
+				"message" => "Email enviado com sucesso"
+			]);
 		} catch (PDOException $error) {
 			throw new BadRequestException($error->getMessage());
 		}
 	}
 
-	function resetPassword(ResetPasswordDto $resetPasswordDto)
+	public function verifyResetPasswordCode(VerifyResetPasswordCodeDto $verifyResetPasswordCodeDto)
+	{
+		try {
+			$user = $this->collaboratorEntity->selectByEmail($verifyResetPasswordCodeDto->email);
+			if (!$user) throw new NotFoundException('Usuário não encontrado');
+			if (!$user->password) throw new NotFoundException('Usuário não está ativo');
+
+			$verificationCodeFromDatabase = $this->userCodeEntity->selectByUserId($user->id);
+			if (!$verificationCodeFromDatabase) throw new NotFoundException('Ainda não foi enviado um email de redefinição de senha, solicite-o primeiramente');
+
+			if ($verificationCodeFromDatabase->verification_code !== $verifyResetPasswordCodeDto->verificationCode) throw new BadRequestException('O código de verificação não coincide');
+
+			return Response::sendBody([
+				"message" => "Código verificado com sucesso"
+			]);
+		} catch (PDOException $error) {
+			throw new BadRequestException($error->getMessage());
+		}
+	}
+
+	public function resetPassword(ResetPasswordDto $resetPasswordDto)
 	{
 		try {
 			$user = $this->collaboratorEntity->selectByEmail($resetPasswordDto->email);

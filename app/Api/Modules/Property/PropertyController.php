@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Api\Modules\Collaborator;
+namespace App\Api\Modules\Property;
 
-use App\Api\Modules\Collaborator\CollaboratorService;
-use App\Api\Modules\Collaborator\Dtos\CollaboratorDto;
+use App\Api\Modules\Property\Dtos\PropertyDto;
+use App\Api\Modules\Property\PropertyService;
 use App\Api\Shared\Guards\Enums\UserLevelEnum;
 use App\Api\Shared\Guards\UserGuard;
 use Raven\Falcon\Attributes\Controller;
@@ -15,46 +15,45 @@ use Raven\Falcon\Attributes\Middlewares\Guard\UseGuard;
 use Raven\Falcon\Attributes\Request\Body;
 use Raven\Falcon\Attributes\Request\Param;
 
-#[Controller(endpoint: 'collaborators')]
-class CollaboratorController
+#[Controller(endpoint: 'properties')]
+class PropertyController
 {
-
 	public function __construct(
-		private readonly CollaboratorService $collaboratorService = new CollaboratorService()
+		private readonly PropertyService $propertyService = new PropertyService()
 	) {}
 
 	#[Post]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
-	public function create(#[Body] CollaboratorDto $collaboratorDto)
+	public function create(#[Body] PropertyDto $propertyDto)
 	{
-		return $this->collaboratorService->create($collaboratorDto);
+		return $this->propertyService->create($propertyDto);
 	}
 
 	#[Put(endpoint: ':id')]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
-	public function update(#[Body] CollaboratorDto $collaboratorDto, #[Param(paramName: 'id')] int $id)
+	public function update(#[Body] PropertyDto $propertyDto, #[Param(paramName: 'id')] int $id)
 	{
-		return $this->collaboratorService->update($id, $collaboratorDto);
+		return $this->propertyService->update($id, $propertyDto);
 	}
 
 	#[Get]
 	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
 	public function getAll()
 	{
-		return $this->collaboratorService->getAll();
+		return $this->propertyService->getAll();
 	}
 
 	#[Get(endpoint: ':id')]
 	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
 	public function getOne(#[Param(paramName: 'id')] int $id)
 	{
-		return $this->collaboratorService->getById($id);
+		return $this->propertyService->getById($id);
 	}
 
 	#[Delete(endpoint: ':id')]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
 	public function delete(#[Param(paramName: 'id')] int $id)
 	{
-		return $this->collaboratorService->delete($id);
+		return $this->propertyService->delete($id);
 	}
 }

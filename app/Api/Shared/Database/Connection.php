@@ -36,7 +36,7 @@ class Connection
 		$query = $this->connection->prepare($sql);
 		$query->execute($params);
 		$result = $query->fetchAll(PDO::FETCH_ASSOC);
-		if (str_contains($sql, "CREATE"))
+		if (str_contains($sql, "INSERT"))
 			$this->lastInsertedId = $this->connection->lastInsertId() ?? $this->lastInsertedId;
 
 		$this->close();

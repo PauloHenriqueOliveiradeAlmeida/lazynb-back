@@ -6,6 +6,6 @@ class CodeService
 {
 	public function generateRandom()
 	{
-		return bin2hex(random_bytes(4));
+		return rand(100000, 999999);
 	}
 }

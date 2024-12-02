@@ -2,7 +2,7 @@
 
 namespace App\Api\Modules\Client\Entity;
 
-use App\Api\Modules\Client\ClientDto;
+use App\Api\Modules\Client\Dtos\ClientDto;
 use App\Api\Shared\Database\Connection;
 
 class ClientEntity
@@ -28,7 +28,7 @@ class ClientEntity
 
 	public function selectById(int $id)
 	{
-		return $this->connection->query("SELECT name, email, phone_number, CPF FROM clients WHERE id = :id", ['id' => $id]);
+		return $this->connection->query("SELECT name, email, phone_number, CPF FROM clients WHERE id = :id", ['id' => $id])[0];
 	}
 
 	public function delete(int $id)
