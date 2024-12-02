@@ -2,7 +2,7 @@
 
 namespace App\Api\Modules\Property\Entity;
 
-use App\Api\Modules\Property\Dtos\PropertyDto;
+use App\Api\Modules\Property\PropertyDto;
 use App\Api\Shared\Database\Connection;
 
 class PropertyEntity
