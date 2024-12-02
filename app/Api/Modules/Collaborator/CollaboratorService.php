@@ -5,7 +5,10 @@ namespace App\Api\Modules\Collaborator;
 use App\Api\Modules\Auth\Entity\UserCodeEntity;
 use App\Api\Modules\Collaborator\Dtos\CollaboratorDto;
 use App\Api\Modules\Collaborator\Entity\CollaboratorEntity;
+use App\Api\Shared\Filters\DatabaseOperation\DatabaseOperationFilter;
+use App\Api\Shared\Guards\Dtos\TokenPayloadDto;
 use App\Api\Shared\Services\Code\CodeService;
+use App\Api\Shared\Services\Token\TokenService;
 use PDOException;
 use Raven\Falcon\Http\Exceptions\BadRequestException;
 use Raven\Falcon\Http\Exceptions\NotFoundException;
@@ -17,18 +20,18 @@ class CollaboratorService
 	public function __construct(
 		private readonly CollaboratorEntity $collaboratorEntity = new CollaboratorEntity,
 		private readonly UserCodeEntity $userCodeEntity = new UserCodeEntity,
-		private readonly CodeService $codeService = new CodeService
+		private readonly CodeService $codeService = new CodeService,
+		private readonly TokenService $tokenService = new TokenService,
+		private readonly DatabaseOperationFilter $databaseOperationFilter = new DatabaseOperationFilter
 	) {}
 
 	public function create(CollaboratorDto $collaboratorDto)
 	{
 		try {
 			$this->collaboratorEntity->create($collaboratorDto);
-
-
 			return Response::sendBody(["message" => "colaborador criado com sucesso"], StatusCode::CREATED);
 		} catch (PDOException $e) {
-			throw new BadRequestException($e->getMessage());
+			$this->databaseOperationFilter->handle($e);
 		}
 	}
 
@@ -36,8 +39,10 @@ class CollaboratorService
 	{
 		try {
 			$collaborators = $this->collaboratorEntity->selectAll();
+			$user = $this->tokenService->getPayload(explode(' ', getallheaders()['Authorization'])[1], getenv("JWT_SECRET"), TokenPayloadDto::class);
+			$filteredCollaborators = [...array_filter($collaborators, fn($collaborator) => $collaborator['id'] !== $user->id)];
 
-			return Response::sendBody($collaborators);
+			return Response::sendBody($filteredCollaborators);
 		} catch (PDOException $e) {
 			throw new BadRequestException($e->getMessage());
 		}

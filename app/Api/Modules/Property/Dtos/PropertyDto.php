@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Modules\Property;
+namespace App\Api\Modules\Property\Dtos;
 
 use Raven\Cassowary\Validators\IsInteger;
 use Raven\Cassowary\Validators\IsRequired;
