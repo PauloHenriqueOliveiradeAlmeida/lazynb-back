@@ -27,7 +27,7 @@ class PropertyEntity
 	{
 		$query = $this->connection->query(
 			"SELECT p.id, p.name, p.cep, p.neighborhood, p.address_number, p.complement, p.city, p.uf, p.description, p.clientid, c.cpf
-			, c.name AS client_name, CASE WHEN COUNT(a.name) > 0 THEN array_agg(a.name) ELSE NULL END AS amenities
+			, c.name AS client_name, CASE WHEN COUNT(a.id) > 0 THEN array_agg(a.id) ELSE NULL END AS amenities
 			FROM properties p JOIN clients c ON p.clientid = c.id LEFT JOIN properties_amenities pa ON p.id = pa.propertyid LEFT JOIN
 			amenities a ON pa.amenityid = a.id GROUP BY p.id, c.id"
 		);
@@ -45,21 +45,25 @@ class PropertyEntity
 	{
 		$query = $this->connection->query(
 			"SELECT p.id, p.name, p.cep, p.neighborhood, p.address_number, p.complement, p.city, p.uf, p.description, p.clientid, c.cpf
-			, c.name AS client_name, CASE WHEN COUNT(a.name) > 0 THEN array_agg(a.name) ELSE NULL END AS amenities
+			, c.name AS client_name, CASE WHEN COUNT(a.id) > 0 THEN array_agg(a.id) ELSE NULL END AS amenities
 			FROM properties p JOIN clients c ON p.clientid = c.id LEFT JOIN properties_amenities pa ON p.id = pa.propertyid LEFT JOIN
 			amenities a ON pa.amenityid = a.id
 			WHERE p.id = :id GROUP BY p.id, c.id",
 			['id' => $id]
 		);
 
-		$result = array_map(
-			fn($row) => $row['amenities'] !== null
-				? array_merge($row, ['amenities' => array_map('trim', explode(',', str_replace(['{', '}', '"'], '', $row['amenities'])))] )
-				: $row,
-			$query
-		);
+		if (!$query || empty($query)) return null;
 
-		return $result[0] ?? null;
+		$result = $query[0];
+		$result['address_number'] = (int) $result['address_number'];
+
+		if (isset($result['amenities'])) {
+			$result['amenities'] = array_map('intval', explode(',', str_replace(['{', '}', '"'], '', $query[0]['amenities'])));
+			return $result;
+		}
+
+		$result['amenities'] = [];
+		return $result;
 	}
 
 
