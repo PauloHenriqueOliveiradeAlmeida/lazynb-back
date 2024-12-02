@@ -4,6 +4,7 @@ namespace App\Api\Modules\Property;
 
 use App\Api\Modules\Property\Entity\PropertyEntity;
 use App\Api\Modules\Amenity\Entity\AmenityEntity;
+use App\Api\Modules\Property\Dtos\PropertyDto;
 use App\Api\Shared\Services\Cep\CepService;
 use App\Api\Shared\Services\Cep\ICep;
 use Exception;
