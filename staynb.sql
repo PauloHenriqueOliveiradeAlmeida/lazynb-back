@@ -37,6 +37,8 @@ CREATE TABLE `amenities` (
 --
 
 INSERT INTO `amenities` (`id`, `name`) VALUES
+(1, 'Cama de casal'),
+(2, 'Cama de solteiro'),
 (3, 'Ar condicionado'),
 (4, 'Aquecimento'),
 (5, 'Wi-Fi'),
