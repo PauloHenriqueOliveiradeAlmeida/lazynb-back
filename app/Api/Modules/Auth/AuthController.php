@@ -7,9 +7,13 @@ use App\Api\Modules\Auth\Dtos\LoginDto;
 use App\Api\Modules\Auth\Dtos\ResetPasswordDto;
 use App\Api\Modules\Auth\Dtos\SendEmailDto;
 use App\Api\Modules\Auth\Dtos\VerifyResetPasswordCodeDto;
+use App\Api\Shared\Guards\Enums\UserLevelEnum;
+use App\Api\Shared\Guards\UserGuard;
 use App\Api\Shared\Services\Mailer\Gateways\MailerSendGateway;
 use Raven\Falcon\Attributes\Controller;
+use Raven\Falcon\Attributes\HttpMethods\Get;
 use Raven\Falcon\Attributes\HttpMethods\Post;
+use Raven\Falcon\Attributes\Middlewares\Guard\UseGuard;
 use Raven\Falcon\Attributes\Request\Body;
 
 #[Controller(endpoint: 'auth')]
@@ -54,5 +58,12 @@ class AuthController
 	public function resetPassword(#[Body] ResetPasswordDto $resetPasswordDto)
 	{
 		return $this->authService->resetPassword($resetPasswordDto);
+	}
+
+	#[Get(endpoint: 'details')]
+	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
+	public function getUserDetails()
+	{
+		return $this->authService->getUserDetails();
 	}
 }

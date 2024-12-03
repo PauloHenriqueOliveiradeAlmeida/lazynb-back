@@ -163,4 +163,13 @@ class AuthService
 			throw new BadRequestException($error->getMessage());
 		}
 	}
+
+	public function getUserDetails()
+	{
+		try {
+			return Response::sendBody((array)$_SESSION['user']);
+		} catch (PDOException $error) {
+			throw new BadRequestException($error->getMessage());
+		}
+	}
 }
