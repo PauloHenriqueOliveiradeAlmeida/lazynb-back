@@ -80,6 +80,8 @@ class AuthService
 	public function firstAccess(FirstAccessDto $firstAccessDto)
 	{
 		try {
+			if ($firstAccessDto->password !== $firstAccessDto->confirmPassword) throw new BadRequestException('As senhas devem ser iguais');
+
 			$user = $this->collaboratorEntity->selectByEmail($firstAccessDto->email);
 			if (!$user) throw new NotFoundException('Usuário não encontrado');
 			if ($user->password) throw new BadRequestException('Usuário já está ativo');
@@ -143,6 +145,8 @@ class AuthService
 	public function resetPassword(ResetPasswordDto $resetPasswordDto)
 	{
 		try {
+			if ($resetPasswordDto->password !== $resetPasswordDto->confirmPassword) throw new BadRequestException('As senhas devem ser iguais');
+
 			$user = $this->collaboratorEntity->selectByEmail($resetPasswordDto->email);
 			if (!$user) throw new NotFoundException('Usuário não encontrado');
 			if (!$user->password) throw new BadRequestException('Usuário não está ativo');
