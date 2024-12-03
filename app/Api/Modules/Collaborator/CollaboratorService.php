@@ -39,7 +39,7 @@ class CollaboratorService
 	{
 		try {
 			$collaborators = $this->collaboratorEntity->selectAll();
-			$user = $this->tokenService->getPayload(explode(' ', getallheaders()['Authorization'])[1], getenv("JWT_SECRET"), TokenPayloadDto::class);
+			$user = $_SESSION['user'];
 			$filteredCollaborators = [...array_filter($collaborators, fn($collaborator) => $collaborator['id'] !== $user->id)];
 
 			return Response::sendBody($filteredCollaborators);
