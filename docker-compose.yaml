@@ -1,0 +1,23 @@
+services:
+  lazynb:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_SERVER=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=lazynb
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - HASH_PASSWORD_COST=15
+      - JWT_SECRET=124
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./lazynb.sql:/docker-entrypoint-initdb.d/lazynb.sql
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
