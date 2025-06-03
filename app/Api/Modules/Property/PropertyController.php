@@ -16,12 +16,15 @@ use Raven\Falcon\Attributes\Middlewares\Guard\UseGuard;
 use Raven\Falcon\Attributes\Request\Body;
 use Raven\Falcon\Attributes\Request\Param;
 
-#[Controller(endpoint: 'properties')]
+#[Controller(endpoint: "properties")]
 class PropertyController
 {
 	public function __construct(
-		private readonly PropertyService $propertyService = new PropertyService(new ViacepGateway)
-	) {}
+		private readonly PropertyService $propertyService = new PropertyService(
+			new ViacepGateway()
+		)
+	) {
+	}
 
 	#[Post]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
@@ -30,10 +33,12 @@ class PropertyController
 		return $this->propertyService->create($propertyDto);
 	}
 
-	#[Put(endpoint: ':id')]
+	#[Put(endpoint: ":id")]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
-	public function update(#[Body] PropertyDto $propertyDto, #[Param(paramName: 'id')] int $id)
-	{
+	public function update(
+		#[Body] PropertyDto $propertyDto,
+		#[Param(paramName: "id")] int $id
+	) {
 		return $this->propertyService->update($id, $propertyDto);
 	}
 
@@ -44,23 +49,23 @@ class PropertyController
 		return $this->propertyService->getAll();
 	}
 
-	#[Get(endpoint: ':id')]
+	#[Get(endpoint: ":id")]
 	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
-	public function get(#[Param(paramName: 'id')] int $id)
+	public function get(#[Param(paramName: "id")] int $id)
 	{
 		return $this->propertyService->getById($id);
 	}
 
-	#[Delete(endpoint: ':id')]
+	#[Delete(endpoint: ":id")]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
-	public function delete(#[Param(paramName: 'id')] int $id)
+	public function delete(#[Param(paramName: "id")] int $id)
 	{
 		return $this->propertyService->delete($id);
 	}
 
-	#[Get(endpoint: ':cep/address')]
+	#[Get(endpoint: ":cep/address")]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
-	public function getAddressByCep(#[Param(paramName: 'cep')] string $cep)
+	public function getAddressByCep(#[Param(paramName: "cep")] string $cep)
 	{
 		return $this->propertyService->getAddressByCep($cep);
 	}
