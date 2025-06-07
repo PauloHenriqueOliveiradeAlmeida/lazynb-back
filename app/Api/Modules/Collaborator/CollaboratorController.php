@@ -15,13 +15,15 @@ use Raven\Falcon\Attributes\Middlewares\Guard\UseGuard;
 use Raven\Falcon\Attributes\Request\Body;
 use Raven\Falcon\Attributes\Request\Param;
 
-#[Controller(endpoint: 'collaborators')]
+#[Controller(endpoint: "collaborators")]
 class CollaboratorController
 {
-
+	private LoggerService $loggerService;
+	
 	public function __construct(
 		private readonly CollaboratorService $collaboratorService = new CollaboratorService()
-	) {}
+	) {
+	}
 
 	#[Post]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
@@ -30,10 +32,12 @@ class CollaboratorController
 		return $this->collaboratorService->create($collaboratorDto);
 	}
 
-	#[Put(endpoint: ':id')]
+	#[Put(endpoint: ":id")]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
-	public function update(#[Body] CollaboratorDto $collaboratorDto, #[Param(paramName: 'id')] int $id)
-	{
+	public function update(
+		#[Body] CollaboratorDto $collaboratorDto,
+		#[Param(paramName: "id")] int $id
+	) {
 		return $this->collaboratorService->update($id, $collaboratorDto);
 	}
 
@@ -44,16 +48,16 @@ class CollaboratorController
 		return $this->collaboratorService->getAll();
 	}
 
-	#[Get(endpoint: ':id')]
+	#[Get(endpoint: ":id")]
 	#[UseGuard(new UserGuard(UserLevelEnum::ALL))]
-	public function getOne(#[Param(paramName: 'id')] int $id)
+	public function getOne(#[Param(paramName: "id")] int $id)
 	{
 		return $this->collaboratorService->getById($id);
 	}
 
-	#[Delete(endpoint: ':id')]
+	#[Delete(endpoint: ":id")]
 	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
-	public function delete(#[Param(paramName: 'id')] int $id)
+	public function delete(#[Param(paramName: "id")] int $id)
 	{
 		return $this->collaboratorService->delete($id);
 	}
