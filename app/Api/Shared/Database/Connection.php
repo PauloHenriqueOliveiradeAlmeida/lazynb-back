@@ -14,13 +14,23 @@ class Connection
 	private function connect()
 	{
 		try {
-			$this->connection = !isset($this->connection) ? new PDO(
-				"pgsql:host=" . getenv('DATABASE_SERVER') . ";port=" . getenv('DATABASE_PORT') . ";dbname=" . getenv('DATABASE_NAME') . ";",
-				getenv("DATABASE_USER"),
-				getenv("DATABASE_PASSWORD")
-			) : $this->connection;
+			$this->connection = !isset($this->connection)
+				? new PDO(
+					"pgsql:host=" .
+						getenv("DATABASE_SERVER") .
+						";port=" .
+						getenv("DATABASE_PORT") .
+						";dbname=" .
+						getenv("DATABASE_NAME") .
+						";",
+					getenv("DATABASE_USER"),
+					getenv("DATABASE_PASSWORD")
+				)
+				: $this->connection;
 		} catch (PDOException $exception) {
-			throw new ServiceUnavailableException("Unable to open database connection due to [ {$exception->getMessage()} ]");
+			throw new ServiceUnavailableException(
+				"Unable to open database connection due to [ {$exception->getMessage()} ]"
+			);
 		}
 	}
 
@@ -29,15 +39,16 @@ class Connection
 		$this->connection = null;
 	}
 
-
 	public function query(string $sql, array $params = [])
 	{
 		$this->connect();
 		$query = $this->connection->prepare($sql);
 		$query->execute($params);
 		$result = $query->fetchAll(PDO::FETCH_ASSOC);
-		if (str_contains($sql, "INSERT"))
-			$this->lastInsertedId = $this->connection->lastInsertId() ?? $this->lastInsertedId;
+		if (str_contains($sql, "INSERT")) {
+			$this->lastInsertedId =
+				$this->connection->lastInsertId() ?? $this->lastInsertedId;
+		}
 
 		$this->close();
 

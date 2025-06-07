@@ -13,16 +13,20 @@ use Raven\Falcon\Http\StatusCode;
 use PDOException;
 use Raven\Falcon\Http\Exceptions\BadRequestException;
 use Raven\Falcon\Http\Exceptions\NotFoundException;
+use App\Api\Shared\Services\Log\LogService;
+use App\Api\Shared\Database\MongoDBConnection;
 
 class PropertyService
 {
 	private readonly CepService $cepService;
+	private LogService $logService;
 	public function __construct(
 		private readonly ICep $cepGateway,
 		private readonly PropertyEntity $propertyEntity = new PropertyEntity,
 		private readonly AmenityEntity $amenityEntity = new AmenityEntity
 	) {
 		$this->cepService = new CepService($this->cepGateway);
+		$this->logService = new LogService(MongoDBConnection::getDatabase());
 	}
 
 	public function create(PropertyDto $propertyDto)
@@ -30,14 +34,21 @@ class PropertyService
 		try {
 			$propertyDto->complement = $propertyDto->complement ?? null;
 
+			
 			$propertyWithoutAmenities = clone $propertyDto;
 			unset($propertyWithoutAmenities->amenities);
 			$propertyId = $this->propertyEntity->create($propertyWithoutAmenities);
-
+			
 			if (isset($propertyDto->amenities) && !empty($propertyDto->amenities)) {
 				$this->propertyEntity->connectAmenities($propertyDto->amenities, $propertyId);
 			}
-
+			$this->logService->logPropertyCreation(
+				$propertyDto->name,
+				$propertyDto->cep,
+				$propertyDto->city,
+				$propertyDto->uf,
+			);
+			
 			return Response::sendBody([
 				"message" => "Propriedade criada com sucesso"
 			], StatusCode::CREATED);

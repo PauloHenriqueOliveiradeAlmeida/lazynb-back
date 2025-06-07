@@ -15,16 +15,20 @@ use Raven\Falcon\Http\StatusCode;
 use PDOException;
 use Raven\Falcon\Http\Exceptions\BadRequestException;
 use Raven\Falcon\Http\Exceptions\NotFoundException;
+use App\Api\Shared\Services\Log\LogService;
+use App\Api\Shared\Database\MongoDBConnection;
 
 class ClientService
 {
 	private MailerService $mailerService;
+	private LogService $logService;
 	public function __construct(
 		IMailer $iMailer,
 		private readonly ClientEntity $clientEntity = new ClientEntity,
 		private readonly PropertyEntity $propertyEntity = new PropertyEntity,
 		private readonly DatabaseOperationFilter $databaseOperationFilter = new DatabaseOperationFilter
 	) {
+		$this->logService = new LogService(MongoDBConnection::getDatabase());
 		$this->mailerService = new MailerService($iMailer);
 	}
 
@@ -32,6 +36,11 @@ class ClientService
 	{
 		try {
 			$this->clientEntity->create($clientDto);
+
+			$this->logService->logClientCreation(
+                $clientDto->name,
+                $clientDto->email
+            );
 
 			return Response::sendBody([
 				"message" => "Cliente criado com sucesso"
@@ -81,13 +90,16 @@ class ClientService
 	{
 		try {
 			$this->propertyEntity->selectByClientId($id);
-
+			
 			if ($this->propertyEntity->selectByClientId($id)) throw new BadRequestException("Cliente possui imóveis cadastrados");
-
+			
 			$deletedClient = $this->clientEntity->delete($id);
-
+			
 			if (!$deletedClient) throw new NotFoundException("Cliente não encontrado");
-
+			
+			$this->logService->logClientDelete(
+				$client_id = $id
+			);
 			return Response::sendBody([
 				"message" => "Cliente removido com sucesso"
 			]);
