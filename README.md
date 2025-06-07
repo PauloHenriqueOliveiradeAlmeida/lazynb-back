@@ -1,6 +1,6 @@
 # 🏠 Lazynb Backend
 
-Backend do sistema de gestão imobiliária Lazynb, desenvolvido como Projeto Integrador da universidade
+Backend do sistema de gestão imobiliária Lazynb, desenvolvido como Projeto Integrador da universidade 
 
 ## 📚 Stack usada
 
