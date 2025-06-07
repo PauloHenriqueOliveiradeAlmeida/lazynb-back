@@ -23,7 +23,7 @@ class LogService
         }
 
         try {
-            $collection = $this->db->selectCollection('lazynb'); 
+            $collection = $this->db->selectCollection(getenv("MONGODB_COLLECTION")); 
 
             $logEntry = [
                 'data_criacao' => new UTCDateTime(),
@@ -50,7 +50,7 @@ class LogService
         }
 
         try {
-            $collection = $this->db->selectCollection('lazynb'); 
+            $collection = $this->db->selectCollection(getenv("MONGODB_COLLECTION")); 
 
             $logEntry = [
                 'data_remocao' => new UTCDateTime(),
@@ -76,7 +76,7 @@ class LogService
         }
 
         try {
-            $collection = $this->db->selectCollection('lazynb'); 
+            $collection = $this->db->selectCollection(getenv("MONGODB_COLLECTION")); 
 
             $logEntry = [
                 'data_criacao' => new UTCDateTime(),

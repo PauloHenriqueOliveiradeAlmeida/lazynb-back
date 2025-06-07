@@ -13,13 +13,12 @@ class MongoDBConnection
 	public static function getDatabase(): ?Database
 	{
 		if (self::$db === null) {
-			$uri =
-				"mongodb+srv://".getenv("MONGODB_USER").":".getenv("MONGODB_PASSWORD")."@lazynb.dfr3v7a.mongodb.net/?retryWrites=true&w=majority&appName=lazynb";
+			$uri = getenv("MONGODB_URI");
 
 			try {
 				$client = new Client($uri);
-				self::$db = $client->selectDatabase("lazynb");
-				$client->selectDatabase('lazynb')->command(['ping' => 1]);
+				self::$db = $client->selectDatabase(getenv("MONGODB_DATABASE"));
+				$client->selectDatabase(getenv("MONGODB_DATABASE"))->command(['ping' => 1]);
 			} catch (MongoDBException $e) {
 				error_log("Erro ao conectar ao MongoDB: " . $e->getMessage());
 				self::$db = null;
