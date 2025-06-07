@@ -21,7 +21,7 @@ class AuthController
 {
 
 	public function __construct(
-		private readonly AuthService $authService = new AuthService(new MockMailerGateway*())
+		private readonly AuthService $authService = new AuthService(new MockMailerGateway())
 	) {}
 
 	#[Post(endpoint: 'login')]
