@@ -9,19 +9,19 @@ use App\Api\Modules\Auth\Dtos\SendEmailDto;
 use App\Api\Modules\Auth\Dtos\VerifyResetPasswordCodeDto;
 use App\Api\Shared\Guards\Enums\UserLevelEnum;
 use App\Api\Shared\Guards\UserGuard;
-use App\Api\Shared\Services\Mailer\Gateways\MailerSendGateway;
 use Raven\Falcon\Attributes\Controller;
 use Raven\Falcon\Attributes\HttpMethods\Get;
 use Raven\Falcon\Attributes\HttpMethods\Post;
 use Raven\Falcon\Attributes\Middlewares\Guard\UseGuard;
 use Raven\Falcon\Attributes\Request\Body;
+use App\Api\Shared\Services\Mailer\Gateways\MockMailerGateway;
 
 #[Controller(endpoint: 'auth')]
 class AuthController
 {
 
 	public function __construct(
-		private readonly AuthService $authService = new AuthService(new MailerSendGateway)
+		private readonly AuthService $authService = new AuthService(new MockMailerGateway*())
 	) {}
 
 	#[Post(endpoint: 'login')]
