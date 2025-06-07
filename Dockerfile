@@ -12,6 +12,11 @@ RUN apk update && apk add --no-cache \
 	unzip \
 	bash \
 	git \
+	autoconf \
+	g++ \
+	make \
+	&& pecl install mongodb \
+	&& docker-php-ext-enable mongodb \
 	&& docker-php-ext-install pdo pdo_pgsql mbstring zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
