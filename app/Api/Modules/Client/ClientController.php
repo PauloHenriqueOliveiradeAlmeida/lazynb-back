@@ -28,7 +28,6 @@ class ClientController
 	}
 
 	#[Post]
-	#[UseGuard(new UserGuard(UserLevelEnum::ADMIN))]
 	public function create(#[Body] ClientDto $clientDto)
 	{
 		return $this->clientService->create($clientDto);
